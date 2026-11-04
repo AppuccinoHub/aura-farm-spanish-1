@@ -56,7 +56,31 @@
 html,body{margin:0;min-height:100%}
 body{background:radial-gradient(circle at 20% 0,#2a1050,var(--bg) 60%) fixed;color:var(--text);font:17px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;-webkit-tap-highlight-color:transparent}
 button{font:inherit;color:inherit;cursor:pointer}
-.wrap{max-width:980px;margin:0 auto;padding:12px 14px 40px}
+.wrap{max-width:560px;margin:0 auto;padding:10px 16px 40px}
+.hud{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:4px 2px 8px;position:sticky;top:0;z-index:50;background:linear-gradient(var(--bg) 70%,transparent)}
+.icon-btn{width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid var(--stroke);display:grid;place-items:center;font-size:22px;flex:0 0 auto}
+.icon-btn:active{transform:scale(.92)}
+.hud .pill{background:rgba(255,255,255,.07);border:1px solid var(--stroke);color:var(--text);border-radius:999px;padding:6px 14px;font-size:16px;font-weight:700}
+.hero{text-align:center;padding:0 4px 4px}
+.hero-art{width:100%;max-width:420px;height:110px;margin:0 auto 4px;border-radius:14px;overflow:hidden}
+.brand{font-size:30px;font-weight:900;letter-spacing:-.02em;background:linear-gradient(90deg,#fff,var(--neon2),var(--pink));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 18px rgba(196,77,255,.5))}
+.brand.sm{font-size:24px}
+.tagline{color:var(--muted);font-size:16px;margin:2px 0 8px}
+.sec{margin:18px 0 8px}
+.level-list{display:flex;flex-direction:column;gap:10px;padding:2px 2px 8px}
+.level-card{display:grid;grid-template-columns:76px 1fr;gap:14px;align-items:center;background:linear-gradient(135deg,rgba(255,255,255,.07),rgba(255,255,255,.02));border:1px solid var(--stroke);border-radius:18px;padding:10px 12px;text-align:left;transition:transform .12s,border-color .12s;width:100%}
+.level-card:hover,.level-card:focus-visible{border-color:var(--neon2);outline:none}
+.level-card:active{transform:scale(.98)}
+.level-card.bonus{border-color:var(--gold)}
+.level-card .thumb{width:76px;height:76px;border-radius:14px;display:grid;place-items:center;background:rgba(0,0,0,.25);font-size:40px}
+.level-card h3{font-size:19px;margin:0 0 2px}
+.level-card p{font-size:16px;color:var(--muted);line-height:1.3;margin:0}
+.tag{display:inline-block;font-size:16px;font-weight:800;letter-spacing:.06em;color:var(--neon2);background:rgba(0,245,212,.12);border-radius:6px;padding:0 8px;margin-bottom:4px}
+.done-badge{display:inline-block;margin-left:8px;font-size:16px;font-weight:800;color:#0a0614;background:var(--ok);padding:0 8px;border-radius:6px;vertical-align:1px}
+.minibar{height:8px;background:#0d0719;border-radius:6px;margin-top:6px;overflow:hidden}.minibar i{display:block;height:100%;background:linear-gradient(90deg,var(--neon2),var(--ok))}
+.tiles{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:8px 0}
+.tile{background:linear-gradient(135deg,#3a1d63,#251444);border:2px solid var(--neon);border-radius:12px;padding:10px 14px;font-weight:800;font-size:21px;min-height:52px;min-width:56px}
+.tile.used{opacity:.3}
 .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
 .top h1{flex:1 1 auto;margin:0;font-size:26px;background:linear-gradient(90deg,var(--neon),var(--pink),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
 .ib{min-width:48px;min-height:48px;border-radius:14px;border:2px solid var(--stroke);background:var(--panel);font-size:20px;padding:6px 10px}
@@ -90,7 +114,7 @@ h3{font-size:19px;margin:6px 0}
 .btn.alt{background:var(--panel);border:2px solid var(--stroke)}
 .btn.yes{background:var(--ok);color:#06210f}.btn.no{background:var(--bad);color:#2a0008}
 .btn:focus-visible,.ib:focus-visible,.chip:focus-visible,.st:focus-visible,.mode:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
-.hud{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.phud{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
 .prog{flex:1;height:10px;background:#0d0719;border-radius:6px;overflow:hidden;min-width:120px}
 .prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--neon),var(--pink));transition:width .3s}
 .prompt{background:var(--panel);border-radius:16px;padding:22px 14px;text-align:center;font-size:24px;margin:10px 0;border:2px dashed var(--neon2);touch-action:pan-y;user-select:none;transition:transform .25s}
@@ -103,9 +127,9 @@ h3{font-size:19px;margin:6px 0}
 .chip.drag{position:fixed;z-index:500;pointer-events:none;opacity:.9}
 .chip.right{background:var(--ok);color:#06210f;border-color:var(--ok)}
 .chip.wrong{background:var(--bad);color:#2a0008;border-color:var(--bad)}
-.fb{min-height:56px;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:17px}
-.fb.ok{background:rgba(57,255,136,.12);border:2px solid var(--ok)}
-.fb.bad{background:rgba(255,92,122,.12);border:2px solid var(--bad)}
+.fb{min-height:62px;border-radius:14px;padding:8px 12px;margin:8px 0;font-size:16px;line-height:1.35;text-align:center;color:var(--muted);border:1px solid transparent}
+.fb.ok{background:rgba(57,255,136,.1);border-color:rgba(57,255,136,.5);color:#d8ffe6}
+.fb.bad{background:rgba(255,92,122,.12);border-color:rgba(255,92,122,.55);color:#ffe0e6}
 .fb:empty{border:none;background:none}
 .inp{font:inherit;font-size:24px;padding:10px 12px;border-radius:12px;border:2px solid var(--neon2);background:#0d0719;color:var(--text);width:220px;max-width:100%;text-align:center}
 .acc{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0}
@@ -129,31 +153,35 @@ table.ch th{color:var(--gold);text-align:left}
 </style></head>
 <body>
 <div class="wrap">
- <div class="top">
-  <button class="ib" id="backBtn" aria-label="Back" style="display:none">←</button>
-  <h1>🌽 Aura Farm · Español 1</h1>
-  <span class="pill" id="aura">⭐ 0</span>
-  <button class="ib" id="chartBtn" aria-label="Verb chart">📋</button>
-  <button class="ib" data-fx="panel" aria-label="Sound settings">🔊</button>
+ <div class="hud">
+  <button class="icon-btn" id="backBtn" aria-label="Back" style="display:none">←</button>
+  <button class="icon-btn" data-fx="panel" aria-label="Sound settings">🔊</button>
+  <div class="pill pts-pill" id="aura" aria-label="Points">⭐ 0 points</div>
+  <button class="icon-btn" id="chartBtn" aria-label="Verb chart">📋</button>
  </div>
 
  <section class="screen on" id="home">
-  <div class="card"><h2>Present tense levels</h2>
-   <p class="muted small16">Every part goes: <b>Singular</b> (yo · tú · él/ella/usted) → <b>Plural</b> (nosotros · ustedes · ellos/ellas) → <b>Combo</b> → ⭐ <b>Bonus</b>. Each finished step grows your farm.</p>
-   <div id="levels"></div></div>
-  <div class="card"><h2>Your farm <span class="muted small16" id="farmCount"></span></h2><div class="farm" id="farm"></div></div>
-  <div class="card"><h2>Save code</h2><p class="muted small16">Copy your code to keep your farm on another computer.</p>
+  <div class="hero"><div class="hero-art"><svg viewBox="0 0 320 110" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3a1a6e"/><stop offset="100%" stop-color="#0a0614"/></linearGradient><linearGradient id="sun" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#ffd166"/><stop offset="100%" stop-color="#ff4d9e"/></linearGradient></defs><rect width="320" height="110" fill="url(#sky)"/><circle cx="262" cy="34" r="20" fill="url(#sun)" opacity=".9"/><polygon points="0,80 60,30 110,72 160,22 215,70 260,45 320,78 320,110 0,110" fill="#2b1b4d"/><polygon points="148,34 160,22 172,34" fill="#f5f0ff" opacity=".8"/><path d="M0 84 Q 90 70 170 82 T 320 78 V110 H0Z" fill="#1a3a2a"/><path d="M0 94 Q 100 84 180 92 T 320 90 V110 H0Z" fill="#0d2818"/><text x="22" y="100" font-size="24">🌽</text><text x="52" y="102" font-size="22">🌽</text><text x="120" y="100" font-size="26">🦙</text><text x="222" y="102" font-size="24">🌳</text><text x="260" y="104" font-size="20">☕</text><text x="80" y="30" font-size="18">🦜</text><text x="26" y="24" font-size="18" fill="#00f5d4" opacity=".7">✦</text></svg></div>
+   <div class="brand">Aura Farm</div><div class="tagline">Español 1 · Present tense · Lock in the vibes</div></div>
+  <p class="tagline center">Each part: <b>Singular</b> → <b>Plural</b> → <b>Combo</b> → ⭐ <b>Bonus</b>. Pick any game you like.</p>
+  <div class="level-list" id="levels"></div>
+  <h2 class="sec">🌾 Your farm <span class="muted small16" id="farmCount"></span></h2><div class="farm" id="farm"></div>
+  <h2 class="sec">💾 Save code</h2><p class="muted small16">Copy your code to keep your farm on another computer.</p>
    <button class="btn alt" id="showCode">Show my code</button><button class="btn alt" id="loadCode">Enter a code</button>
-   <p id="codeOut" style="word-break:break-all"></p></div>
+   <p id="codeOut" style="word-break:break-all"></p>
  </section>
 
- <section class="screen" id="level"><div class="card"><h2 id="lvTitle"></h2><p class="muted small16" id="lvSub"></p><div id="parts"></div></div></section>
+ <section class="screen" id="level"><div class="hero"><div class="brand sm" id="lvTitle"></div><div class="tagline" id="lvSub"></div></div><div class="level-list" id="parts"></div></section>
 
- <section class="screen" id="part"><div class="card"><h2 id="ptTitle"></h2><p class="muted small16" id="ptVerbs"></p><div class="steps" id="steps"></div></div>
-  <div class="card" id="modeCard" style="display:none"><h2 id="modeTitle"></h2><p class="muted small16">Pick a game. Finish one (7 of 10 right, or 8 hits in Battle) to complete this step.</p><div class="modes" id="modes"></div></div></section>
+ <section class="screen" id="part"><div class="hero"><div class="brand sm" id="ptTitle"></div><div class="tagline" id="ptVerbs"></div></div>
+  <p class="tagline center">Go in order for best memory: Singular → Plural → Combo → Bonus. Everything is open.</p>
+  <div class="level-list" id="steps"></div></section>
+
+ <section class="screen" id="modes"><div class="hero"><div class="brand sm" id="modeTitle"></div><div class="tagline" id="modeSub"></div></div>
+  <div class="level-list" id="modeList"></div></section>
 
  <section class="screen" id="play"><div class="card">
-  <div class="hud"><b id="playTitle"></b><span class="prog"><i id="progBar"></i></span><span id="playInfo" class="timer"></span></div>
+  <div class="phud"><b id="playTitle"></b><span class="prog"><i id="progBar"></i></span><span id="playInfo" class="timer"></span></div>
   <div id="stage"></div>
   <div class="fb" id="fb" aria-live="polite"></div>
   <div class="center"><button class="btn" id="nextBtn" style="display:none">Next ▶</button></div>
@@ -621,8 +649,8 @@ const STEPS=[{k:"sg",t:"1 · Singular",d:"yo · tú · él/ella/usted",p:[0,1,2]
 const FARM=[["🌽","maíz","corn"],["🫘","frijoles","beans"],["🌶️","chile","chili pepper"],["🥔","papa","potato (from the Andes)"],["🍠","yuca","cassava"],["🥑","aguacate","avocado"],["🍌","plátano","plantain"],["🥭","mango","mango"],["🍍","piña","pineapple"],["🥥","coco","coconut"],["🍫","cacao","cacao / chocolate"],["☕","café","coffee"],["🧉","mate","yerba mate"],["🫓","arepa","arepa"],["🥟","empanada","empanada"],["🫔","tamal","tamale"],["🍞","pan dulce","sweet bread"],["🌾","quinua","quinoa"],["🦙","llama","llama"],["🐑","alpaca","alpaca"],["🦜","guacamayo","macaw"],["🐦","quetzal","quetzal bird"],["🦅","cóndor","condor"],["🐢","tortuga","sea turtle"],["🦥","perezoso","sloth"],["🐆","jaguar","jaguar"],["🐒","mono","monkey"],["🌳","ceiba","ceiba tree"]];
 /* ========== STATE ========== */
 const KEY="auraFarmEs1.v1";
-let S={aura:0,done:{}};
-try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&typeof v==="object"){S.aura=+v.aura||0;S.done=v.done||{};}}catch(e){}
+let S={aura:0,done:{},modes:{}};
+try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&typeof v==="object"){S.aura=+v.aura||0;S.done=v.done||{};S.modes=v.modes||{};}}catch(e){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 function sid(l,p,s){return l+"."+p+"."+s;}
 function doneCount(){return Object.keys(S.done).length;}
@@ -631,12 +659,12 @@ const $=id=>document.getElementById(id);
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
 function rnd(a){return a[Math.floor(Math.random()*a.length)];}
 function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function setAura(d,anchor,sub){S.aura+=d;save();$("aura").textContent="⭐ "+S.aura;if(d>0){AuraFX.burst(anchor,"+"+d,sub);AuraFX.bump($("aura"));}}
+function setAura(d,anchor,sub){S.aura+=d;save();$("aura").textContent=ptsText();if(d>0){AuraFX.burst(anchor,"+"+d,sub);AuraFX.bump($("aura"));}}
 /* ========== NAV ========== */
 let cur={l:0,p:0,s:0},inRound=false,stack=["home"];
 function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));$("backBtn").style.display=id==="home"?"none":"";window.scrollTo(0,0);}
 function go(id,push){if(push!==false){stack.push(id);try{history.pushState({s:id},"");}catch(e){}}show(id);}
-function back(){if(inRound){openLeave();return;}stack.pop();const id=stack[stack.length-1]||"home";if(id==="level")renderLevel();if(id==="part")renderPart();if(id==="home")renderHome();show(id);}
+function back(){if(inRound){openLeave();return;}stack.pop();const id=stack[stack.length-1]||"home";if(id==="level")renderLevel();if(id==="part")renderPart();if(id==="modes")renderModes();if(id==="home")renderHome();show(id);}
 $("backBtn").onclick=()=>{if(inRound){openLeave();return;}try{history.back();}catch(e){back();}};
 window.addEventListener("popstate",()=>{if(inRound){try{history.pushState({s:"play"},"");}catch(e){}openLeave();return;}back();});
 try{history.replaceState({s:"home"},"");}catch(e){}
@@ -645,11 +673,13 @@ $("leaveNo").onclick=()=>$("leaveM").classList.remove("show");
 $("leaveYes").onclick=()=>{$("leaveM").classList.remove("show");endRoundCleanup();inRound=false;try{history.back();}catch(e){back();}};
 /* ========== HOME ========== */
 function partDone(l,p){return STEPS.every((_,s)=>S.done[sid(l,p,s)]);}
+const LV_ICON=["🗣️","📚","⭐","🌀","🥾"];
+function ptsText(){return "⭐ "+S.aura+" points";}
 function renderHome(){
- $("aura").textContent="⭐ "+S.aura;
+ $("aura").textContent=ptsText();
  $("levels").innerHTML=LEVELS.map((L,l)=>{let n=0,t=0;L.parts.forEach((_,p)=>STEPS.forEach((_,s)=>{t++;if(S.done[sid(l,p,s)])n++;}));
-  return `<button class="lv" data-l="${l}"><b>${esc(L.t)}</b> <span class="muted small16">· ${n}/${t} steps</span><br><span class="small16">${esc(L.sub)}</span><span class="bar"><i style="width:${Math.round(100*n/t)}%"></i></span></button>`;}).join("");
- document.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{cur.l=+b.dataset.l;renderLevel();go("level");});
+  return `<button class="level-card" data-l="${l}"><div class="thumb" aria-hidden="true">${LV_ICON[l]}</div><div><span class="tag">LEVEL ${l+1}</span>${n===t?'<span class="done-badge">Done</span>':""}<h3>${esc(L.t.split(" · ").slice(1).join(" · "))}</h3><p>${esc(L.sub)} · ${n}/${t} steps</p><div class="minibar"><i style="width:${Math.round(100*n/t)}%"></i></div></div></button>`;}).join("");
+ document.querySelectorAll("#levels .level-card").forEach(b=>b.onclick=()=>{cur.l=+b.dataset.l;renderLevel();go("level");});
  renderFarm();
 }
 let lastFarm=farmUnlocked();
@@ -659,20 +689,23 @@ function renderFarm(){const u=farmUnlocked();
  lastFarm=u;}
 function renderLevel(){const L=LEVELS[cur.l];$("lvTitle").textContent=L.t;$("lvSub").textContent=L.sub;
  $("parts").innerHTML=L.parts.map((P_,p)=>{const n=STEPS.filter((_,s)=>S.done[sid(cur.l,p,s)]).length;
-  return `<button class="lv" data-p="${p}"><b>${esc(P_.t)}</b> ${n===4?"✅":`<span class="muted small16">${n}/4</span>`}<br><span class="small16">${P_.v.map(esc).join(" · ")}</span></button>`;}).join("");
- document.querySelectorAll("#parts .lv").forEach(b=>b.onclick=()=>{cur.p=+b.dataset.p;renderPart();go("part");});}
-function stepOpen(s){return s===0||!!S.done[sid(cur.l,cur.p,s-1)];}
-function renderPart(){const P_=LEVELS[cur.l].parts[cur.p];$("ptTitle").textContent=LEVELS[cur.l].t.split("·")[0]+"· "+P_.t;
- $("ptVerbs").innerHTML="Verbs: <b>"+P_.v.map(v=>esc(v)+" ("+esc(V[v].en[0])+")").join(", ")+"</b>";
- $("steps").innerHTML=STEPS.map((st,s)=>{const d=S.done[sid(cur.l,cur.p,s)],o=stepOpen(s);
-  return `<button class="st ${d?"done":""} ${s===3?"bonus":""}" data-s="${s}" ${o?"":"disabled"}><b>${st.t} ${d?"✅":o?"":"🔒"}</b><span class="small16">${st.d}</span></button>`;}).join("");
- document.querySelectorAll(".st").forEach(b=>b.onclick=()=>{cur.s=+b.dataset.s;if(cur.s===3){startRound("bonus");return;}showModes();});
- $("modeCard").style.display="none";}
-const MODES=[["swipe","👆 Swipe Match","English + Spanish: match or not?"],["drop","🎯 Lock In Drop","Drag the right form into the blank"],["build","✍️ Sentence Builder","Type the verb in a sentence"],["battle","⚔️ Aura Battle","60 seconds. Tap fast!"]];
-function showModes(){$("modeCard").style.display="";$("modeTitle").textContent=STEPS[cur.s].t+" — choose a game";
- $("modes").innerHTML=MODES.map(m=>`<button class="mode" data-m="${m[0]}"><b>${m[1]}</b><span class="small16">${m[2]}</span></button>`).join("");
- document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>startRound(b.dataset.m));
- $("modeCard").scrollIntoView({behavior:AuraFX.reduced()?"auto":"smooth",block:"start"});}
+  return `<button class="level-card" data-p="${p}"><div class="thumb" aria-hidden="true">${FARM[(cur.l*4+p)%FARM.length][0]}</div><div><span class="tag">${esc(P_.t.split(" · ")[0].toUpperCase())}</span>${n===4?'<span class="done-badge">Done</span>':""}<h3>${P_.v.map(esc).join(" · ")}</h3><p>${n}/4 steps</p></div></button>`;}).join("");
+ document.querySelectorAll("#parts .level-card").forEach(b=>b.onclick=()=>{cur.p=+b.dataset.p;renderPart();go("part");});}
+const STEP_ICON=["👤","👥","🔀","⭐"];
+function renderPart(){const P_=LEVELS[cur.l].parts[cur.p];$("ptTitle").textContent=LEVELS[cur.l].t.split(" · ")[0]+" · "+P_.t;
+ $("ptVerbs").innerHTML=P_.v.map(v=>"<b>"+esc(v)+"</b> ("+esc(V[v].en[0])+")").join(" · ");
+ $("steps").innerHTML=STEPS.map((st,s)=>{const d=S.done[sid(cur.l,cur.p,s)];const nm=s<3?MODES.filter(m=>S.modes[sid(cur.l,cur.p,s)+"."+m[0]]).length:0;
+  return `<button class="level-card ${s===3?"bonus":""}" data-s="${s}"><div class="thumb" aria-hidden="true">${STEP_ICON[s]}</div><div><span class="tag">${s===3?"BONUS":"STEP "+(s+1)}</span>${d?'<span class="done-badge">Done</span>':""}<h3>${esc(st.t.replace(/^\d · /,""))}</h3><p>${esc(st.d)}${s<3?` · ${nm}/4 games done`:""}</p></div></button>`;}).join("");
+ document.querySelectorAll("#steps .level-card").forEach(b=>b.onclick=()=>{cur.s=+b.dataset.s;if(cur.s===3){startRound("bonus");return;}renderModes();go("modes");});}
+const MODES=[["swipe","SWIPE","Swipe Match","Each card shows English and Spanish. Swipe right (✅) if they match, left (❌) if they don't.","📱"],
+ ["drop","DRAG","Lock In Drop","Drag or tap the right verb form into the sentence.","🎯"],
+ ["build","BUILD","Verb Builder","Tap tiles (stem + ending) to build the verb.","🧱"],
+ ["battle","BATTLE","Aura Battle","Timed battle vs a silly jaguar boss. Tap the right form to hit it.","🐆"]];
+function renderModes(){const id=sid(cur.l,cur.p,cur.s);$("modeTitle").textContent=STEPS[cur.s].t.replace(/^\d · /,"")+" · "+LEVELS[cur.l].parts[cur.p].v.join(", ");
+ $("modeSub").textContent=STEPS[cur.s].d+" · Pick any game. Win one to finish this step.";
+ $("modeList").innerHTML=MODES.map(m=>`<button class="level-card" data-m="${m[0]}"><div class="thumb" aria-hidden="true">${m[4]}</div><div><span class="tag">${m[1]}</span>${S.modes[id+"."+m[0]]?'<span class="done-badge">Done</span>':""}<h3>${m[2]}</h3><p>${m[3]} (${ROUND[m[0]].n?ROUND[m[0]].n+" items":ROUND[m[0]].secs+" seconds"})</p></div></button>`).join("");
+ document.querySelectorAll("#modeList .level-card").forEach(b=>b.onclick=()=>startRound(b.dataset.m));}
+const ROUND={swipe:{n:16,need:12},drop:{n:16,need:12},build:{n:12,need:9},battle:{secs:75,need:12},bonus:{n:10,need:7}};
 /* ========== QUESTIONS ========== */
 function enPhrase(subj,inf){const v=V[inf],es=EN_SUBJ[subj];
  if(v.be){const b=subj==="yo"?"am":(subj==="él"||subj==="ella")?"is":"are";return `${es} ${b}`;}
@@ -711,15 +744,15 @@ function why(q,given){const v=V[q.inf],f=forms(q.inf),g=(given||"").trim().toLow
 let R=null;
 function endRoundCleanup(){AuraFX.cancelAuto();if(R&&R.timer)clearInterval(R.timer);if(R&&R.cleanup)R.cleanup();AuraFX.setTempo&&AuraFX.setTempo(1);}
 function startRound(mode){endRoundCleanup();
- const n=mode==="bonus"?6:mode==="build"?8:mode==="battle"?200:10;
+ const n=mode==="battle"?200:ROUND[mode].n;
  R={mode,qs:pool(n),i:0,right:0,tries:0,first:true,pts:mode==="bonus"?20:10,locked:false};
- inRound=true;$("playTitle").textContent=(mode==="bonus"?"⭐ Bonus round · double aura":MODES.find(m=>m[0]===mode)[1]+" · "+STEPS[cur.s].t.replace(/^\d · /,""));
- if(stack[stack.length-1]!=="play")go("play");else show("play");
- if(mode==="battle"){R.left=60;R.timer=setInterval(()=>{if(R.locked||AuraFX.isOpen()||$("chartM").classList.contains("show"))return;R.left--;$("playInfo").textContent="⏱ "+R.left+"s";AuraFX.setTempo(AuraFX.tempoForTime(R.left,60));if(R.left<=0)finish();},1000);}
+ inRound=true;$("playTitle").textContent=(mode==="bonus"?"⭐ Bonus round · double aura":MODES.find(m=>m[0]===mode)[2]+" · "+STEPS[cur.s].t.replace(/^\d · /,""));
+ const top=stack[stack.length-1];if(top==="result"){stack[stack.length-1]="play";show("play");}else if(top!=="play")go("play");else show("play");
+ if(mode==="battle"){R.left=ROUND.battle.secs;R.timer=setInterval(()=>{if(R.locked||AuraFX.isOpen()||$("chartM").classList.contains("show"))return;R.left--;$("playInfo").textContent="⏱ "+R.left+"s";AuraFX.setTempo(AuraFX.tempoForTime(R.left,ROUND.battle.secs));if(R.left<=0)finish();},1000);}
  render();}
 function render(){const q=R.qs[R.i];R.first=true;R.locked=false;$("fb").innerHTML="";$("fb").className="fb";$("nextBtn").style.display="none";
  if(R.mode!=="battle"){$("progBar").style.width=(100*R.i/R.qs.length)+"%";$("playInfo").textContent=(R.i+1)+" / "+R.qs.length;AuraFX.setTempo(AuraFX.tempoForQuestion(R.i,R.qs.length));}
- else{$("progBar").style.width=(100*(60-R.left)/60)+"%";$("playInfo").textContent="⏱ "+R.left+"s";}
+ else{$("progBar").style.width=(100*(ROUND.battle.secs-R.left)/ROUND.battle.secs)+"%";$("playInfo").textContent="⏱ "+R.left+"s";}
  ({swipe:rSwipe,drop:rDrop,build:rBuild,battle:rBattle,bonus:rBonus})[R.mode](q);}
 function correct(anchor){if(R.first)R.right++;R.locked=true;AuraFX.ok();setAura(R.first?R.pts:Math.round(R.pts/2),anchor,R.mode==="bonus"&&R.first?"double!":"");
  $("fb").className="fb ok";$("fb").innerHTML="✅ "+rnd(["Nice!","Yes!","Aura +","Perfect!","Got it!"]);}
@@ -758,20 +791,28 @@ function enableDrag(b,choose){b.onpointerdown=e=>{if(R.locked||b.disabled)return
  document.addEventListener("pointermove",mv);document.addEventListener("pointerup",up);};}
 function rDrop(q){choiceStage(q,shuf([q.ans].concat(distractors(q,3,true))),{drag:true,sentence:true});}
 function rBonus(q){choiceStage(q,shuf([q.ans].concat(distractors(q,2,false))),{drag:false,sentence:false});}
-// build
-function rBuild(q){$("stage").innerHTML=`<p class="center muted small16">Type the verb that fits. Use the accent buttons if you need them.</p>
- <div class="prompt"><span class="en">${esc(enPhrase(q.subj,q.inf))} · (${esc(q.inf)})</span><span class="big">${esc(cap(q.subj))} <span class="slot">___</span> ${esc(V[q.inf].c)}.</span></div>
- <div class="center"><input class="inp" id="bIn" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Your answer"><button class="btn" id="bGo">Check</button></div>
- <div class="acc">${["á","é","í","ó","ú","ñ"].map(c=>`<button data-c="${c}" aria-label="type ${c}">${c}</button>`).join("")}</div>`;
- const inp=$("bIn");setTimeout(()=>inp.focus(),30);
- document.querySelectorAll(".acc button").forEach(b=>b.onclick=()=>{const s=inp.selectionStart??inp.value.length;inp.value=inp.value.slice(0,s)+b.dataset.c+inp.value.slice(inp.selectionEnd??s);inp.focus();inp.setSelectionRange(s+1,s+1);});
- const check=()=>{if(R.locked)return;const g=inp.value.trim().toLowerCase().replace(/\s+/g," ").replace(new RegExp("^"+q.subj+" "),"");if(!g)return;
-  if(g===q.ans){inp.style.borderColor="var(--ok)";correct(inp);autoNext();}else{wrong(q,g);if(R.tries++>=1){R.locked=true;inp.value=q.ans;$("nextBtn").style.display="";}else $("fb").innerHTML+=`<br><span class="small16">Try once more!</span>`;}};
- R.tries=0;$("bGo").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();check();}};}
+// build (tiles: stem + ending, like the Italian builder)
+function splitForm(inf,w){const st=inf.slice(0,-2);
+ if(!V[inf].f&&w.startsWith(st))return [st,w.slice(st.length)];
+ if(w.length<=3)return [w];const k=w.length-(/(mos|es|as|en|an)$/.test(w)?w.match(/(mos|es|as|en|an)$/)[0].length:1);return [w.slice(0,k),w.slice(k)];}
+function rBuild(q){const parts=splitForm(q.inf,q.ans);let pool_=parts.slice();
+ distractors(q,4,false).forEach(d=>{splitForm(q.inf,d).forEach(x=>{if(pool_.length<7&&!pool_.includes(x))pool_.push(x);});});
+ pool_=shuf(pool_);R.built=[];
+ $("stage").innerHTML=`<p class="center muted small16">Tap tiles to build the verb. Tap ⌫ to undo.</p>
+ <div class="prompt"><span class="en">${esc(enPhrase(q.subj,q.inf))} · (${esc(q.inf)})</span><span class="big">${esc(cap(q.subj))} <span class="slot" id="slot">&nbsp;</span> ${esc(V[q.inf].c)}.</span></div>
+ <div class="tiles" id="tiles">${pool_.map((t,i)=>`<button class="tile" data-i="${i}" data-t="${esc(t)}">${esc(t)}</button>`).join("")}</div>
+ <div class="center"><button class="btn alt" id="bUndo" aria-label="Undo">⌫</button><button class="btn" id="bGo">Check</button></div>`;
+ const upd=()=>{$("slot").textContent=R.built.map(x=>x.t).join("")||"\u00a0";};
+ document.querySelectorAll("#tiles .tile").forEach(b=>b.onclick=()=>{if(R.locked||b.classList.contains("used"))return;b.classList.add("used");R.built.push({t:b.dataset.t,b});upd();});
+ $("bUndo").onclick=()=>{const x=R.built.pop();if(x)x.b.classList.remove("used");upd();};
+ R.tries=0;$("bGo").onclick=()=>{if(R.locked||!R.built.length)return;const g=R.built.map(x=>x.t).join("");
+  if(g===q.ans){correct($("slot"));autoNext();}
+  else{wrong(q,g);R.built.forEach(x=>x.b.classList.remove("used"));R.built=[];upd();
+   if(R.tries++>=1){R.locked=true;$("slot").textContent=q.ans;$("nextBtn").style.display="";}else $("fb").innerHTML+=`<br><span class="small16">Try once more!</span>`;}};}
 // battle
 function rBattle(q){const opts=shuf([q.ans].concat(distractors(q,3,true)));
  $("stage").innerHTML=`<div class="prompt"><span class="en">${esc(enPhrase(q.subj,q.inf))}</span><span class="big">${esc(q.subj)} · ${esc(q.inf)}</span></div>
- <p class="center small16">Hits: <b id="hits">${R.right}</b></p><div class="bat">${opts.map(o=>`<button class="chip" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
+ <div class="center"><span style="font-size:48px" aria-hidden="true">🐆</span><div class="prog" style="max-width:240px;margin:4px auto"><i style="width:${Math.max(0,100-100*R.right/ROUND.battle.need)}%;background:linear-gradient(90deg,var(--bad),var(--gold))"></i></div><p class="small16">Jaguar boss HP · Hits: <b id="hits">${R.right}</b> / ${ROUND.battle.need}</p></div><div class="bat">${opts.map(o=>`<button class="chip" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
  document.querySelectorAll(".bat .chip").forEach(b=>b.onclick=()=>{if(R.locked)return;
   if(b.dataset.v===q.ans){b.classList.add("right");correct(b);R.locked=true;setTimeout(()=>{if(R&&R.mode==="battle"&&inRound){R.i++;if(R.i>=R.qs.length)R.qs=R.qs.concat(pool(50));render();}},700);}
   else{b.classList.add("wrong");b.disabled=true;wrong(q,b.dataset.v);}});}
@@ -780,7 +821,7 @@ document.addEventListener("keydown",e=>{if(!inRound||!R||$("leaveM").classList.c
  if(R.mode!=="build"&&R.mode!=="battle"&&/^[1-4]$/.test(e.key)){const c=document.querySelectorAll("#chips .chip")[+e.key-1];if(c)c.click();}
  if(e.key==="Enter"&&$("nextBtn").style.display!=="none"&&R.mode!=="build")advance();});
 function finish(){endRoundCleanup();inRound=false;const total=R.mode==="battle"?null:R.qs.length;
- const need=R.mode==="battle"?8:R.mode==="bonus"?4:R.mode==="build"?6:7;const passed=R.right>=need;const id=sid(cur.l,cur.p,cur.s);
+ const need=ROUND[R.mode].need;if(R.right>=need&&R.mode!=="bonus"){S.modes[sid(cur.l,cur.p,cur.s)+"."+R.mode]=1;save();}const passed=R.right>=need;const id=sid(cur.l,cur.p,cur.s);
  const before=farmUnlocked();let newStep=false;if(passed&&!S.done[id]){S.done[id]=1;newStep=true;save();}
  const after=farmUnlocked();
  $("resTitle").textContent=passed?"🎉 Step complete!":"Almost there!";
@@ -792,6 +833,7 @@ function finish(){endRoundCleanup();inRound=false;const total=R.mode==="battle"?
  stack[stack.length-1]="result";show("result");}
 $("resAgain").onclick=()=>startRound(R.mode);
 $("resBack").onclick=()=>{try{history.back();}catch(e){back();}};
+$("resBack").textContent="Back";
 /* ========== CHART ========== */
 function chartHTML(){const vs=onPlayOrPart()?LEVELS[cur.l].parts[cur.p].v:["hablar","comer","vivir","ser","estar","ir"];const sg=onPlayOrPart()&&cur.s===0;
  let h=sg?`<p class="small16 muted">Singular step: the plural side is dimmed. It's coming next!</p>`:"";
@@ -806,8 +848,8 @@ $("chartBtn").onclick=()=>{$("chartBody").innerHTML=chartHTML();$("chartM").clas
 $("chartClose").onclick=()=>$("chartM").classList.remove("show");
 document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("chartM").classList.remove("show");$("leaveM").classList.remove("show");}},true);
 /* ========== SAVE CODE ========== */
-$("showCode").onclick=()=>{const code="ES1-"+btoa(JSON.stringify({a:S.aura,d:Object.keys(S.done)}));$("codeOut").innerHTML=`<b>${esc(code)}</b>`;};
-$("loadCode").onclick=()=>{const c=prompt("Paste your save code:");if(!c)return;try{const o=JSON.parse(atob(c.trim().replace(/^ES1-/,"")));S.aura=+o.a||0;S.done={};(o.d||[]).forEach(k=>{if(/^\d+\.\d+\.\d$/.test(k))S.done[k]=1;});save();lastFarm=farmUnlocked();renderHome();$("codeOut").textContent="✅ Farm loaded!";}catch(e){$("codeOut").textContent="That code didn't work. Check it and try again.";}};
+$("showCode").onclick=()=>{const code="ES1-"+btoa(JSON.stringify({a:S.aura,d:Object.keys(S.done),m:Object.keys(S.modes)}));$("codeOut").innerHTML=`<b>${esc(code)}</b>`;};
+$("loadCode").onclick=()=>{const c=prompt("Paste your save code:");if(!c)return;try{const o=JSON.parse(atob(c.trim().replace(/^ES1-/,"")));S.aura=+o.a||0;S.done={};S.modes={};(o.m||[]).forEach(k=>{if(/^\d+\.\d+\.\d\.[a-z]+$/.test(k))S.modes[k]=1;});(o.d||[]).forEach(k=>{if(/^\d+\.\d+\.\d$/.test(k))S.done[k]=1;});save();lastFarm=farmUnlocked();renderHome();$("codeOut").textContent="✅ Farm loaded!";}catch(e){$("codeOut").textContent="That code didn't work. Check it and try again.";}};
 /* ========== INIT ========== */
 AuraFX.init({key:"auraFX.es1",paused:()=>$("chartM").classList.contains("show")||$("leaveM").classList.contains("show")});
 window.addEventListener("beforeunload",e=>{if(inRound){e.preventDefault();e.returnValue="";}});
