@@ -1,0 +1,817 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Aura Farm · Español 1 (present tense)</title>
+<meta name="description" content="Spanish 1 present-tense verb game: regular -AR, -ER/-IR, ser/estar/ir, irregulars and stem-changers. Swipe, drag, build and battle to grow a Latin American farm.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🌽%3C/text%3E%3C/svg%3E">
+<style>
+/* ===== AURA FX (shared): sound panel, points pill, points burst ===== */
+.afx-backdrop{position:fixed;inset:0;z-index:1000;display:none;align-items:center;justify-content:center;padding:16px;background:rgba(5,2,12,.78)}
+.afx-backdrop.show{display:flex}
+.afx-modal{width:100%;max-width:440px;background:#1d1030;border:2px solid #c44dff;border-radius:20px;padding:18px 16px 16px;color:#f5f0ff;box-shadow:0 10px 40px rgba(0,0,0,.6);font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif}
+.afx-modal h3{font-size:22px;margin:0 0 12px;text-align:center}
+.afx-row{display:flex;align-items:center;gap:12px;width:100%;min-height:72px;margin:0 0 10px;padding:10px 12px;border-radius:16px;border:2px solid rgba(196,77,255,.55);background:#261640;color:#f5f0ff;text-align:left;font:inherit;cursor:pointer}
+.afx-row.on{border-color:#00f5d4;background:#12303a}
+.afx-ico{font-size:26px;flex:0 0 auto}
+.afx-txt{flex:1 1 auto;min-width:0}
+.afx-txt b{display:block;font-size:19px}
+.afx-txt small{display:block;font-size:15px;line-height:1.3;color:#d9d0ea;margin-top:2px}
+.afx-sw{flex:0 0 auto;width:54px;height:30px;border-radius:15px;background:#4a3a63;position:relative;transition:background .15s}
+.afx-knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;transition:left .15s}
+.afx-row.on .afx-sw{background:#00c9ad}
+.afx-row.on .afx-knob{left:27px}
+.afx-state{flex:0 0 auto;width:34px;font-weight:800;font-size:17px;text-align:center}
+.afx-note{font-size:15px;color:#d9d0ea;text-align:center;margin:2px 0 12px}
+.afx-done{display:block;width:100%;min-height:52px;border-radius:14px;border:none;font:inherit;font-size:19px;font-weight:800;color:#fff;cursor:pointer;background:linear-gradient(135deg,#c44dff,#ff4d9e)}
+.afx-row:focus-visible,.afx-done:focus-visible{outline:3px solid #ffd166;outline-offset:2px}
+.pts-pill{font-weight:800;white-space:nowrap}
+.afx-bump{animation:afxBump .4s ease-out}
+@keyframes afxBump{0%{transform:scale(1)}35%{transform:scale(1.18)}100%{transform:scale(1)}}
+.afx-burst{position:fixed;z-index:950;width:0;height:0;pointer-events:none}
+.afx-pts{position:absolute;left:0;top:0;transform:translate(-50%,-50%);font:900 28px/1 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:#ffd166;text-align:center;white-space:nowrap;
+  padding:6px 12px;border-radius:14px;background:rgba(14,6,30,.9);border:2px solid rgba(255,209,102,.7);box-shadow:0 4px 16px rgba(0,0,0,.5);
+  text-shadow:0 0 8px rgba(255,209,102,.6);animation:afxRise .9s ease-out forwards}
+.afx-pts small{display:block;font-size:16px;font-weight:800;color:#fff;margin-top:4px;text-shadow:none}
+.afx-dot{position:absolute;left:-4px;top:-4px;width:8px;height:8px;border-radius:50%;background:var(--c);box-shadow:0 0 8px var(--c);animation:afxDot .6s ease-out forwards}
+@keyframes afxRise{0%{opacity:0;transform:translate(-50%,-60%) scale(.8)}15%{opacity:1;transform:translate(-50%,-100%) scale(1.06)}75%{opacity:1}100%{opacity:0;transform:translate(-50%,-165%) scale(1)}}
+@keyframes afxDot{0%{opacity:1;transform:translate(0,0) scale(.5)}100%{opacity:0;transform:translate(var(--dx),var(--dy)) scale(1)}}
+@keyframes afxFade{0%{opacity:0}10%{opacity:1}75%{opacity:1}100%{opacity:0}}
+.afx-burst.still .afx-pts{transform:translate(-50%,-100%);animation:afxFade .9s linear forwards}
+@media (prefers-reduced-motion:reduce){
+  .afx-dot{display:none}
+  .afx-pts{transform:translate(-50%,-100%);animation:afxFade .9s linear forwards !important}
+  .afx-bump{animation:none}
+  .afx-sw,.afx-knob{transition:none}
+}
+@media (max-width:520px){ .afx-row{min-height:68px;gap:10px} .afx-txt small{font-size:14px} }
+/* auto-advance: a thin bar fills the Next button while the game waits (paused with the 🔊 panel) */
+.afx-auto{position:relative;overflow:hidden}
+.afx-auto::after{content:"";position:absolute;left:0;bottom:0;height:5px;width:100%;background:rgba(255,255,255,.85);transform-origin:left center;transform:scaleX(0);animation:afxAuto var(--afx-auto,1500ms) linear forwards;pointer-events:none}
+.afx-auto.afx-auto-paused::after{animation-play-state:paused}
+@keyframes afxAuto{to{transform:scaleX(1)}}
+@media (prefers-reduced-motion:reduce){ .afx-auto::after{display:none} }
+
+:root{--bg:#0a0614;--bg2:#140a22;--card:#1a0f2e;--neon:#c44dff;--neon2:#00f5d4;--pink:#ff4d9e;--gold:#ffd166;--ok:#39ff88;--bad:#ff5c7a;--text:#f5f0ff;--muted:#c3b8d8;--panel:#221438;--stroke:rgba(196,77,255,.45)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:radial-gradient(circle at 20% 0,#2a1050,var(--bg) 60%) fixed;color:var(--text);font:17px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans",sans-serif;-webkit-tap-highlight-color:transparent}
+button{font:inherit;color:inherit;cursor:pointer}
+.wrap{max-width:980px;margin:0 auto;padding:12px 14px 40px}
+.top{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.top h1{flex:1 1 auto;margin:0;font-size:26px;background:linear-gradient(90deg,var(--neon),var(--pink),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.ib{min-width:48px;min-height:48px;border-radius:14px;border:2px solid var(--stroke);background:var(--panel);font-size:20px;padding:6px 10px}
+.pill{background:var(--panel);border:2px solid var(--gold);color:var(--gold);border-radius:999px;padding:6px 12px;font-weight:800}
+.screen{display:none}.screen.on{display:block}
+.card{background:var(--card);border:2px solid var(--stroke);border-radius:18px;padding:14px;margin:10px 0;box-shadow:0 0 22px rgba(196,77,255,.18)}
+h2{font-size:21px;margin:0 0 8px;color:var(--neon2)}
+h3{font-size:19px;margin:6px 0}
+.muted{color:var(--muted)}
+.lv{display:block;width:100%;text-align:left;background:var(--panel);border:2px solid transparent;border-radius:14px;padding:12px;margin:8px 0;min-height:56px}
+.lv:hover,.lv:focus-visible{border-color:var(--neon2);outline:none}
+.lv b{color:var(--gold)}
+.lv .bar{height:8px;background:#0d0719;border-radius:6px;margin-top:6px;overflow:hidden}
+.lv .bar i{display:block;height:100%;background:linear-gradient(90deg,var(--neon2),var(--ok))}
+.farm{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:8px}
+.fi{background:var(--panel);border-radius:12px;text-align:center;padding:8px 4px;font-size:16px;min-height:96px}
+.fi .e{font-size:36px;display:block;line-height:1.2}
+.fi small{display:block;color:var(--muted);font-size:16px}
+.fi.lock .e{filter:grayscale(1) brightness(.35)}.fi.lock{color:#8a7fa3}
+.fi.new{animation:pop .8s ease-out 2}
+@keyframes pop{50%{transform:scale(1.15);box-shadow:0 0 18px var(--gold)}}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.st{border-radius:14px;padding:12px;background:var(--panel);border:2px solid var(--stroke);text-align:left;min-height:84px}
+.st.done{border-color:var(--ok)}.st.bonus{border-color:var(--gold)}
+.st[disabled]{opacity:.45;cursor:not-allowed}
+.st b{display:block;font-size:18px}
+.modes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.mode{border-radius:14px;padding:14px;border:none;background:linear-gradient(135deg,#3a1d63,#251444);text-align:left;min-height:80px;border:2px solid var(--stroke)}
+.mode b{display:block;font-size:19px}
+.btn{display:inline-block;border:none;border-radius:14px;padding:12px 18px;font-weight:800;min-height:52px;background:linear-gradient(135deg,var(--neon),var(--pink));color:#fff;margin:4px}
+.btn.alt{background:var(--panel);border:2px solid var(--stroke)}
+.btn.yes{background:var(--ok);color:#06210f}.btn.no{background:var(--bad);color:#2a0008}
+.btn:focus-visible,.ib:focus-visible,.chip:focus-visible,.st:focus-visible,.mode:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.hud{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:6px}
+.prog{flex:1;height:10px;background:#0d0719;border-radius:6px;overflow:hidden;min-width:120px}
+.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--neon),var(--pink));transition:width .3s}
+.prompt{background:var(--panel);border-radius:16px;padding:22px 14px;text-align:center;font-size:24px;margin:10px 0;border:2px dashed var(--neon2);touch-action:pan-y;user-select:none;transition:transform .25s}
+.prompt .big{font-size:34px;font-weight:800;display:block;margin-top:6px}
+.prompt .en{color:var(--muted);font-size:18px;display:block}
+.slot{display:inline-block;min-width:130px;border-bottom:3px solid var(--gold);color:var(--gold);padding:0 6px}
+.slot.hot{background:rgba(255,209,102,.15)}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:8px 0}
+.chip{background:var(--panel);border:2px solid var(--neon2);border-radius:12px;padding:10px 16px;font-weight:800;font-size:20px;min-height:52px;min-width:90px;touch-action:none;user-select:none}
+.chip.drag{position:fixed;z-index:500;pointer-events:none;opacity:.9}
+.chip.right{background:var(--ok);color:#06210f;border-color:var(--ok)}
+.chip.wrong{background:var(--bad);color:#2a0008;border-color:var(--bad)}
+.fb{min-height:56px;border-radius:12px;padding:10px 12px;margin:8px 0;font-size:17px}
+.fb.ok{background:rgba(57,255,136,.12);border:2px solid var(--ok)}
+.fb.bad{background:rgba(255,92,122,.12);border:2px solid var(--bad)}
+.fb:empty{border:none;background:none}
+.inp{font:inherit;font-size:24px;padding:10px 12px;border-radius:12px;border:2px solid var(--neon2);background:#0d0719;color:var(--text);width:220px;max-width:100%;text-align:center}
+.acc{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin:6px 0}
+.acc button{min-width:48px;min-height:48px;border-radius:10px;border:2px solid var(--stroke);background:var(--panel);font-size:20px}
+.bat{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.bat .chip{width:100%;font-size:22px;min-height:64px}
+.timer{font-weight:900;color:var(--gold);font-size:22px}
+table.ch{width:100%;border-collapse:collapse;margin:6px 0 12px;font-size:17px}
+table.ch td,table.ch th{border:1px solid var(--stroke);padding:6px}
+table.ch th{color:var(--gold);text-align:left}
+.end{color:var(--pink);font-weight:800}
+.hide{opacity:.25}
+.modal{position:fixed;inset:0;z-index:900;display:none;align-items:flex-start;justify-content:center;padding:14px;background:rgba(5,2,12,.8);overflow:auto}
+.modal.show{display:flex}
+.mbox{background:#1d1030;border:2px solid var(--neon);border-radius:18px;padding:16px;max-width:720px;width:100%}
+.center{text-align:center}
+.res{font-size:44px;font-weight:900;color:var(--gold)}
+.small16{font-size:16px}
+@media (max-width:520px){.top h1{font-size:21px}.prompt{font-size:21px}.prompt .big{font-size:29px}.chip{font-size:19px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style></head>
+<body>
+<div class="wrap">
+ <div class="top">
+  <button class="ib" id="backBtn" aria-label="Back" style="display:none">←</button>
+  <h1>🌽 Aura Farm · Español 1</h1>
+  <span class="pill" id="aura">⭐ 0</span>
+  <button class="ib" id="chartBtn" aria-label="Verb chart">📋</button>
+  <button class="ib" data-fx="panel" aria-label="Sound settings">🔊</button>
+ </div>
+
+ <section class="screen on" id="home">
+  <div class="card"><h2>Present tense levels</h2>
+   <p class="muted small16">Every part goes: <b>Singular</b> (yo · tú · él/ella/usted) → <b>Plural</b> (nosotros · ustedes · ellos/ellas) → <b>Combo</b> → ⭐ <b>Bonus</b>. Each finished step grows your farm.</p>
+   <div id="levels"></div></div>
+  <div class="card"><h2>Your farm <span class="muted small16" id="farmCount"></span></h2><div class="farm" id="farm"></div></div>
+  <div class="card"><h2>Save code</h2><p class="muted small16">Copy your code to keep your farm on another computer.</p>
+   <button class="btn alt" id="showCode">Show my code</button><button class="btn alt" id="loadCode">Enter a code</button>
+   <p id="codeOut" style="word-break:break-all"></p></div>
+ </section>
+
+ <section class="screen" id="level"><div class="card"><h2 id="lvTitle"></h2><p class="muted small16" id="lvSub"></p><div id="parts"></div></div></section>
+
+ <section class="screen" id="part"><div class="card"><h2 id="ptTitle"></h2><p class="muted small16" id="ptVerbs"></p><div class="steps" id="steps"></div></div>
+  <div class="card" id="modeCard" style="display:none"><h2 id="modeTitle"></h2><p class="muted small16">Pick a game. Finish one (7 of 10 right, or 8 hits in Battle) to complete this step.</p><div class="modes" id="modes"></div></div></section>
+
+ <section class="screen" id="play"><div class="card">
+  <div class="hud"><b id="playTitle"></b><span class="prog"><i id="progBar"></i></span><span id="playInfo" class="timer"></span></div>
+  <div id="stage"></div>
+  <div class="fb" id="fb" aria-live="polite"></div>
+  <div class="center"><button class="btn" id="nextBtn" style="display:none">Next ▶</button></div>
+ </div></section>
+
+ <section class="screen" id="result"><div class="card center"><h2 id="resTitle"></h2><div class="res" id="resScore"></div><p id="resMsg"></p>
+  <button class="btn" id="resAgain">Play again</button><button class="btn alt" id="resBack">Back to part</button></div></section>
+</div>
+
+<div class="modal" id="chartM" role="dialog" aria-modal="true" aria-label="Verb chart"><div class="mbox"><div style="display:flex;justify-content:space-between;align-items:center"><h2>📋 Verb chart</h2><button class="btn alt" id="chartClose">Close</button></div><div id="chartBody"></div></div></div>
+<div class="modal" id="leaveM" role="dialog" aria-modal="true"><div class="mbox center"><h2>Leave this round?</h2><p>Your points in this round won't count.</p><button class="btn" id="leaveYes">Leave</button><button class="btn alt" id="leaveNo">Keep playing</button></div></div>
+
+<script>
+/* ===================== AURA FX (shared by both Aura Farm games) =====================
+   Sound effects, calm procedural background music, the 🔊 sound panel and the points burst.
+   Master copy: /workspace/apps/shared/aurafx/aurafx.js (each game's build step inlines it).
+   Everything is generated with the Web Audio API: no audio files and no network requests.
+   Every audio call is wrapped in try/catch; with no AudioContext everything becomes a no-op.
+   The AudioContext is only created after a real user gesture (browser autoplay rules). */
+const AuraFX = (function(){
+  "use strict";
+  const S = {sfx:true, music:false};          /* classroom defaults: sounds on, music off */
+  let KEY = "auraFX.v1";
+  const W = typeof window!=="undefined" ? window : {};
+  const AC_CLASS = W.AudioContext || W.webkitAudioContext || null;
+  function load(){ try{ const v = JSON.parse(W.localStorage.getItem(KEY)); if(v && typeof v==="object"){ if(typeof v.sfx==="boolean") S.sfx=v.sfx; if(typeof v.music==="boolean") S.music=v.music; } }catch(e){} }
+  function save(){ try{ W.localStorage.setItem(KEY, JSON.stringify({sfx:S.sfx, music:S.music})); }catch(e){} }
+
+  /* ---------------- audio graph ---------------- */
+  let ac=null, out=null, sfxBus=null, unlocked=false;
+  function gestureSeen(){ try{ return unlocked || !!(navigator.userActivation && navigator.userActivation.hasBeenActive); }catch(e){ return unlocked; } }
+  function limiter(c){ const k=c.createDynamicsCompressor(); try{ k.threshold.value=-10; k.knee.value=8; k.ratio.value=12; k.attack.value=0.004; k.release.value=0.3; }catch(e){} return k; }
+  function ctx(){
+    if(ac) return ac;
+    if(!AC_CLASS || !gestureSeen()) return null;
+    try{
+      ac = new AC_CLASS();
+      out = limiter(ac); out.connect(ac.destination);
+      sfxBus = ac.createGain(); sfxBus.gain.value = 1; sfxBus.connect(out);
+    }catch(e){ ac=null; }
+    return ac;
+  }
+  function resume(){ try{ const c=ctx(); if(c && c.state==="suspended"){ const p=c.resume(); if(p && p.catch) p.catch(()=>{}); } }catch(e){} }
+
+  /* one enveloped oscillator: soft attack, exponential decay, optional glide and low-pass */
+  function voice(c, dest, t, f, dur, o){
+    o = o || {};
+    const osc=c.createOscillator(), g=c.createGain();
+    osc.type = o.type || "sine";
+    osc.frequency.setValueAtTime(f, t);
+    if(o.glide) osc.frequency.exponentialRampToValueAtTime(o.glide, t+dur*0.8);
+    if(o.detune) osc.detune.setValueAtTime(o.detune, t);
+    const a=o.attack||0.005, v=o.vol||0.1;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(v, t+a);
+    if(o.hold) g.gain.setValueAtTime(v, t+a+o.hold);
+    g.gain.exponentialRampToValueAtTime(0.0001, t+dur);
+    let node = osc;
+    if(o.lp){ const f2=c.createBiquadFilter(); f2.type="lowpass"; f2.frequency.setValueAtTime(o.lp, t); f2.Q.value=0.4; osc.connect(f2); node=f2; }
+    node.connect(g); g.connect(dest);
+    osc.start(t); osc.stop(t+dur+0.05);
+  }
+
+  /* ---------------- sound effects ---------------- */
+  const SFX = {
+    click(c,d,t){ voice(c,d,t,1100,0.06,{vol:0.1,attack:0.003,glide:700}); },
+    ok(c,d,t){      /* two-note chime, G5 then C6, with a soft bell partial */
+      [[784,0],[1046.5,0.1]].forEach(([f,dt])=>{ voice(c,d,t+dt,f,0.6,{vol:0.15,attack:0.004}); voice(c,d,t+dt,f*2,0.25,{vol:0.025,attack:0.004}); });
+    },
+    bad(c,d,t){     /* gentle low falling tone, filtered, no buzz */
+      voice(c,d,t,247,0.42,{type:"triangle",vol:0.12,attack:0.02,glide:196,lp:900});
+      voice(c,d,t,123.5,0.42,{vol:0.06,attack:0.02,glide:98});
+    },
+    fanfare(c,d,t){ /* C5 E5 G5, then a warm C major chord with C6 on top */
+      [523.25,659.25,783.99].forEach((f,i)=>voice(c,d,t+i*0.12,f,0.32,{type:"triangle",vol:0.1,attack:0.006,lp:2600}));
+      [523.25,659.25,783.99,1046.5].forEach((f,i)=>voice(c,d,t+0.38,f,1.3,{type:i===3?"sine":"triangle",vol:i===3?0.09:0.06,attack:0.01,lp:3000}));
+      voice(c,d,t+0.38,2093,0.5,{vol:0.02,attack:0.005});
+    },
+    soft(c,d,t){    /* "round over" without the fanfare (for a round that isn't Done yet) */
+      voice(c,d,t,587.33,0.5,{type:"triangle",vol:0.09,attack:0.01,lp:2000});
+      voice(c,d,t+0.16,440,0.8,{type:"triangle",vol:0.09,attack:0.01,lp:2000});
+    }
+  };
+  let lastClick=0;
+  function play(kind){
+    if(!S.sfx || !SFX[kind]) return;
+    try{
+      const c=ctx(); if(!c) return;
+      resume();
+      if(kind==="click"){ const n=c.currentTime; if(n-lastClick<0.035) return; lastClick=n; }
+      SFX[kind](c, sfxBus, c.currentTime+0.01);
+    }catch(e){}
+  }
+
+  /* ---------------- procedural music ----------------
+     68 BPM, F major. Warm pad chords (2 bars each), soft sine bass, a slow pentatonic melody
+     in 2-bar call-and-response phrases, and a light arpeggio in some sections.
+     Every 8 bars a new section picks another progression and which layers play, so it never
+     loops exactly but always stays in the same calm key. Original material.
+     Tempo: each bar is planned as events on a beat grid; the scheduler turns beats into seconds
+     half a beat at a time, using a tempo multiplier (1 = 68 BPM, max 1.3) that glides toward the
+     game's target by at most TEMPO_SLEW per second. Only note timing changes: pitch never changes
+     (oscillator frequencies are fixed, the echo time is fixed), so a ramp has no pitch jumps. */
+  const BPM=68, BEAT=60/BPM, BAR=BEAT*4, STEP=0.5;
+  const TEMPO_MAX=1.3, TEMPO_SLEW=0.06, LOOKAHEAD=1.0;
+  const mtof = m => 440*Math.pow(2,(m-69)/12);
+  const CH = {
+    F:  {pad:[53,57,60,64], bass:41, tones:[65,69,72,77,81]},  /* Fmaj7 */
+    Dm: {pad:[50,53,57,60], bass:38, tones:[62,65,69,72,74,77]},/* Dm7 */
+    Bb: {pad:[50,53,58,60], bass:46, tones:[62,65,72,74,77]},  /* Bb(add9) */
+    C:  {pad:[52,55,60,62], bass:36, tones:[67,72,74,79]},     /* Cadd9 */
+    Gm: {pad:[53,55,58,62], bass:43, tones:[67,74,77,79]},     /* Gm7 */
+    Am: {pad:[52,55,57,60], bass:45, tones:[69,72,79,81]}      /* Am7 */
+  };
+  const PROGS = [["F","Am","Bb","C"],["Dm","Bb","F","C"],["Bb","Am","Gm","C"],["F","Dm","Gm","Bb"],["Dm","Gm","Bb","C"],["F","C","Dm","Bb"]];
+  const MEL = [62,65,67,69,72,74,77,79,81];   /* F major pentatonic, D4 to A5 */
+  const RHY = [[0,1.5,3],[0,2],[0.5,2,3],[0,1,2.5],[1,2.5],[0,3],[0,1.5,2.5],[0,2,3]];
+  function clampTempo(x){ x=Number(x); return Number.isFinite(x) ? Math.max(1, Math.min(TEMPO_MAX, x)) : 1; }
+  function rng(seed){ let a=seed>>>0; return function(){ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+  function impulse(c, secs){
+    const n=Math.floor(c.sampleRate*secs), b=c.createBuffer(2,n,c.sampleRate);
+    for(let ch=0;ch<2;ch++){ const d=b.getChannelData(ch); let lp=0; for(let i=0;i<n;i++){ lp = lp*0.6 + (Math.random()*2-1)*0.4; d[i]=lp*Math.pow(1-i/n,2.6); } }
+    return b;
+  }
+  function Engine(c, dest, seed){
+    const R = rng(seed);
+    const pick = a => a[Math.floor(R()*a.length)];
+    /* graph: layers -> mix -> dest; sends -> reverb / echo -> mix */
+    const mix=c.createGain(); mix.gain.value=0.55; mix.connect(dest);
+    const rev=c.createConvolver(); rev.buffer=impulse(c,3.2); const revG=c.createGain(); revG.gain.value=0.5; rev.connect(revG); revG.connect(mix);
+    const dly=c.createDelay(2); dly.delayTime.value=BEAT*0.75; const fb=c.createGain(); fb.gain.value=0.32; const dlp=c.createBiquadFilter(); dlp.type="lowpass"; dlp.frequency.value=2200;
+    dly.connect(dlp); dlp.connect(fb); fb.connect(dly); const dG=c.createGain(); dG.gain.value=0.28; dlp.connect(dG); dG.connect(mix); dG.connect(rev);
+    function pan(v){ if(c.createStereoPanner){ const p=c.createStereoPanner(); p.pan.value=v; return p; } return c.createGain(); }
+    const padB=c.createGain(); padB.gain.value=1; padB.connect(mix); const padS=c.createGain(); padS.gain.value=0.6; padB.connect(padS); padS.connect(rev);
+    const bassB=c.createGain(); bassB.gain.value=1; bassB.connect(mix);
+    const melP=pan(-0.12), melB=c.createGain(); melB.connect(melP); melP.connect(mix); const melS=c.createGain(); melS.gain.value=0.45; melP.connect(melS); melS.connect(rev); melP.connect(dly);
+    const arpP=pan(0.22), arpB=c.createGain(); arpB.connect(arpP); arpP.connect(mix); const arpS=c.createGain(); arpS.gain.value=0.5; arpP.connect(arpS); arpS.connect(rev);
+
+    let bar=0, sec=null, lastProg=-1, mi=4, rhyA=null;
+    /* beat clock: events wait in q as {b: absolute beat, fn(time, secondsPerBeat)} */
+    let q=[], curBeat=0, curT=0, tempo=1;
+    const at=(b, fn)=>q.push({b, fn});
+    function plan(n){
+      let p; do{ p=Math.floor(R()*PROGS.length); }while(p===lastProg); lastProg=p;
+      if(n===0) return {prog:PROGS[0], mel:false, arp:false, intro:true};
+      const r=R();
+      if(r<0.12) return {prog:PROGS[p], mel:false, arp:false};         /* breathing space */
+      if(r<0.50) return {prog:PROGS[p], mel:true,  arp:false};
+      if(r<0.78) return {prog:PROGS[p], mel:false, arp:true};
+      return {prog:PROGS[p], mel:true, arp:true, sparseArp:true};
+    }
+    function pad(t, chord, spb, dt0){
+      const dur=spb*8, rel=2.4, f=c.createBiquadFilter(); f.type="lowpass"; f.Q.value=0.5;
+      f.frequency.setValueAtTime(650,t); f.frequency.linearRampToValueAtTime(1150,t+dur*0.55); f.frequency.linearRampToValueAtTime(720,t+dur+rel);
+      const g=c.createGain(); g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(1,t+1.4); g.gain.setValueAtTime(1,t+dur); g.gain.linearRampToValueAtTime(0,t+dur+rel);
+      f.connect(g); g.connect(padB);
+      chord.pad.forEach((m,i)=>{ [[-7,"triangle",0.030],[7,"sine",0.034]].forEach(([dt,type,v],k)=>{
+        const o=c.createOscillator(), og=c.createGain(); o.type=type; o.frequency.value=mtof(m); o.detune.value=dt+dt0[i*2+k]; og.gain.value=v*(i===0?1.1:1);
+        o.connect(og); og.connect(f); o.start(t); o.stop(t+dur+rel+0.1); }); });
+    }
+    function bass(t, chord, strong, spb){
+      const o=c.createOscillator(), g=c.createGain(), len=spb*4; o.type="sine"; o.frequency.value=mtof(chord.bass);
+      const v=strong?0.085:0.06; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(v,t+0.08); g.gain.exponentialRampToValueAtTime(v*0.35,t+len*0.9); g.gain.linearRampToValueAtTime(0,t+len+0.3);
+      o.connect(g); g.connect(bassB); o.start(t); o.stop(t+len+0.4);
+    }
+    function note(t, m, len, vel){
+      const f=mtof(m), g=c.createGain(); g.connect(melB);
+      g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vel,t+0.025); g.gain.exponentialRampToValueAtTime(vel*0.4,t+len*0.6); g.gain.exponentialRampToValueAtTime(0.0001,t+len+0.9);
+      [[1,"sine",1],[2,"sine",0.18],[1,"triangle",0.22]].forEach(([mul,type,v],k)=>{ const o=c.createOscillator(), og=c.createGain(); o.type=type; o.frequency.value=f*mul; if(k===2) o.detune.value=5; og.gain.value=v; o.connect(og); og.connect(g); o.start(t); o.stop(t+len+1); });
+    }
+    function melody(base, chord, barInPhrase){
+      if(barInPhrase===0){ if(R()<0.2) { rhyA=null; return; } rhyA=pick(RHY); }
+      else if(!rhyA || R()<0.3) return;        /* the answer bar sometimes rests */
+      const rh = barInPhrase===0 ? rhyA : (R()<0.6 ? rhyA : pick(RHY));
+      rh.forEach((b,k)=>{
+        if(k===0){ let best=mi, bd=99; MEL.forEach((m,j)=>{ if(chord.tones.includes(m)){ const d=Math.abs(j-mi)+R()*0.8; if(d<bd){bd=d;best=j;} } }); mi=best; }
+        else { mi = Math.max(1, Math.min(MEL.length-2, mi + pick([-2,-1,-1,1,1,2,0]))); }
+        const next = k+1<rh.length ? rh[k+1] : 4, lenB = Math.max(0.6, Math.min(1.8, next-b))*0.95;
+        const m=MEL[mi], jit=R()*0.02, vel=0.11+R()*0.03;
+        at(base+b, (t,spb)=>note(t+jit, m, lenB*spb, vel));
+      });
+    }
+    function arp(base, chord, sparse){
+      const ns = chord.pad.map(m=>m+12), pat = pick([[0,1,2,3,2,1,2,3],[0,2,1,3,0,2,1,3],[3,2,1,0,1,2,3,2]]);
+      for(let s=0;s<8;s++){
+        if(R() > (sparse?0.5:0.85)) continue;
+        const m=ns[pat[s]], v=0.045+R()*0.015;
+        at(base+s*STEP, tt=>{
+          const o=c.createOscillator(), g=c.createGain(), f=c.createBiquadFilter();
+          o.type="triangle"; o.frequency.value=mtof(m); f.type="lowpass"; f.frequency.value=1800;
+          g.gain.setValueAtTime(0,tt); g.gain.linearRampToValueAtTime(v,tt+0.006); g.gain.exponentialRampToValueAtTime(0.0001,tt+0.42);
+          o.connect(f); f.connect(g); g.connect(arpB); o.start(tt); o.stop(tt+0.45);
+        });
+      }
+    }
+    function planBar(){
+      const base=bar*4, inSec = bar%8; if(inSec===0) sec = plan(Math.floor(bar/8));
+      const chord = CH[sec.prog[Math.floor(inSec/2)]];
+      if(inSec%2===0){ const dt0=chord.pad.flatMap(()=>[R()*4-2, R()*4-2]); at(base, (t,spb)=>pad(t, chord, spb, dt0)); }
+      const strong = inSec%2===0; at(base, (t,spb)=>bass(t, chord, strong, spb));
+      if(sec.mel && !(sec.intro)) melody(base, chord, inSec%2);
+      if(sec.intro && inSec>=4) melody(base, chord, inSec%2);
+      if(sec.arp) arp(base, chord, sec.sparseArp);
+      bar++;
+    }
+    /* schedule everything up to audio time `until`; target(t) gives the wanted tempo */
+    function advance(until, target, log){
+      let guard=0;
+      while(curT < until && guard++ < 20000){
+        if(curBeat >= bar*4) planBar();
+        const want=clampTempo(target(curT)), maxD=TEMPO_SLEW*STEP*BEAT/tempo;
+        tempo += Math.max(-maxD, Math.min(maxD, want-tempo));
+        const spb=BEAT/tempo, end=curBeat+STEP-1e-6, keep=[];
+        for(const ev of q){ if(ev.b < end){ try{ ev.fn(curT + Math.max(0, ev.b-curBeat)*spb, spb); }catch(e){} } else keep.push(ev); }
+        q=keep;
+        if(log) log.push([curT, tempo]);
+        curT += STEP*spb; curBeat += STEP;
+      }
+    }
+    return { advance, start(t){ curT=t; }, catchUp(now){ if(curT < now+0.05) curT = now+0.1; },
+      get bar(){ return bar; }, get tempo(){ return tempo; }, get time(){ return curT; } };
+  }
+
+  let eng=null, mBus=null, timer=null, playing=false, hiddenPause=false, tempoTarget=1;
+  const MUSIC_LEVEL = 0.5;   /* music bus level: clearly quieter than the effects */
+  function tick(){
+    try{
+      const c=ac; if(!c || !eng) return;
+      eng.catchUp(c.currentTime);   /* never schedule in the past (e.g. after a busy moment) */
+      eng.advance(c.currentTime+LOOKAHEAD, ()=>tempoTarget);
+    }catch(e){}
+  }
+  /* the game sets the wanted tempo (1 = normal … 1.3); the engine glides there smoothly */
+  function setTempo(x){ tempoTarget = clampTempo(x); return tempoTarget; }
+  /* untimed rounds: a gentle lift over the last 3 questions (i = 0-based index of the current one) */
+  function tempoForQuestion(i, n){
+    i=Number(i); n=Number(n); if(!(n>0) || !Number.isFinite(i)) return 1;
+    const left=n-i; if(left>3 || left<1) return 1;
+    return 1 + 0.25*(4-left)/3;           /* 3 left: +8%, 2 left: +17%, last one: +25% */
+  }
+  /* timed modes: ramp up over the final stretch (30% of the time, at least 10 s, at most 30 s) */
+  function tempoForTime(left, total){
+    left=Number(left); total=Number(total); if(!(total>0) || !Number.isFinite(left)) return 1;
+    const win=Math.min(total, Math.max(10, Math.min(30, total*0.3)));
+    if(left>=win) return 1;
+    return 1 + (TEMPO_MAX-1)*(1-Math.max(0,left)/win);
+  }
+  function musicStart(){
+    if(playing || !S.music || (typeof document!=="undefined" && document.hidden)) return;
+    try{
+      const c=ctx(); if(!c) return;
+      resume();
+      mBus=c.createGain(); mBus.gain.setValueAtTime(0,c.currentTime); mBus.gain.linearRampToValueAtTime(MUSIC_LEVEL,c.currentTime+3); mBus.connect(out);
+      eng=Engine(c, mBus, (Math.random()*4294967295)>>>0);
+      eng.start(c.currentTime+0.15); playing=true; tick(); timer=setInterval(tick, 200);
+    }catch(e){ playing=false; }
+  }
+  function musicStop(fade){
+    if(!playing) return;
+    playing=false; clearInterval(timer); timer=null; eng=null;
+    const b=mBus; mBus=null;
+    try{ const t=ac.currentTime, f=fade==null?0.8:fade; b.gain.cancelScheduledValues(t); b.gain.setValueAtTime(b.gain.value,t); b.gain.linearRampToValueAtTime(0,t+f); setTimeout(()=>{ try{ b.disconnect(); }catch(e){} }, f*1000+150); }catch(e){}
+  }
+  /* offline render for tests: returns {sampleRate, channels:[Float32Array,...], tempoLog:[[t,tempo],...]}
+     tempoFn(t) (optional) gives the wanted tempo at time t, e.g. to render a ramp */
+  function renderMusic(secs, sr, seed, tempoFn){
+    const OC = W.OfflineAudioContext || W.webkitOfflineAudioContext;
+    if(!OC) return Promise.reject(new Error("no OfflineAudioContext"));
+    const c = new OC(2, Math.ceil(secs*sr), sr);
+    const lim = limiter(c); lim.connect(c.destination);
+    const bus = c.createGain(); bus.gain.setValueAtTime(0,0); bus.gain.linearRampToValueAtTime(MUSIC_LEVEL,3); bus.connect(lim);
+    const e = Engine(c, bus, seed==null?12345:seed), log=[];
+    e.start(0.1); e.advance(secs, typeof tempoFn==="function" ? tempoFn : ()=>1, log);
+    return c.startRendering().then(buf=>({sampleRate:buf.sampleRate, channels:[buf.getChannelData(0), buf.getChannelData(1)], tempoLog:log}));
+  }
+  function renderSfx(kind, sr){
+    const OC = W.OfflineAudioContext || W.webkitOfflineAudioContext;
+    const c = new OC(1, Math.ceil(2*sr), sr), lim=limiter(c); lim.connect(c.destination);
+    SFX[kind](c, lim, 0.01);
+    return c.startRendering().then(buf=>buf.getChannelData(0));
+  }
+
+  /* ---------------- 🔊 panel ---------------- */
+  let opener=null;
+  function el(id){ return document.getElementById(id); }
+  function buildPanel(){
+    if(el("afxPanel")) return;
+    const d=document.createElement("div");
+    d.id="afxPanel"; d.className="afx-backdrop"; d.setAttribute("role","dialog"); d.setAttribute("aria-modal","true"); d.setAttribute("aria-labelledby","afxTitle");
+    d.innerHTML =
+      '<div class="afx-modal">'+
+      '<h3 id="afxTitle">🔊 Sound settings</h3>'+
+      '<button type="button" class="afx-row" id="afxSfx" role="switch"><span class="afx-ico" aria-hidden="true">🔔</span>'+
+        '<span class="afx-txt"><b>Sounds</b><small>Clicks, right and wrong answers, round complete. On at the start.</small></span>'+
+        '<span class="afx-sw" aria-hidden="true"><span class="afx-knob"></span></span><span class="afx-state"></span></button>'+
+      '<button type="button" class="afx-row" id="afxMusic" role="switch"><span class="afx-ico" aria-hidden="true">🎵</span>'+
+        '<span class="afx-txt"><b>Music</b><small>Calm background music. Off at the start: turn it on if you like.</small></span>'+
+        '<span class="afx-sw" aria-hidden="true"><span class="afx-knob"></span></span><span class="afx-state"></span></button>'+
+      '<p class="afx-note" id="afxNote"></p>'+
+      '<button type="button" class="afx-done" id="afxDone">Done</button></div>';
+    document.body.appendChild(d);
+    d.addEventListener("click", e=>{ if(e.target===d) close(); });
+    el("afxSfx").addEventListener("click", ()=>{ S.sfx=!S.sfx; save(); sync(); if(S.sfx) play("ok"); });
+    el("afxMusic").addEventListener("click", ()=>{ S.music=!S.music; save(); unlocked=true; if(S.music) musicStart(); else musicStop(); sync(); });
+    el("afxDone").addEventListener("click", close);
+  }
+  function isOpen(){ const p=el("afxPanel"); return !!(p && p.classList.contains("show")); }
+  function open(from){ buildPanel(); opener=from||document.activeElement; sync(); el("afxPanel").classList.add("show"); autoCheck(); setTimeout(()=>{ const b=el("afxSfx"); if(b) b.focus(); },30); }
+  function close(){ const p=el("afxPanel"); if(!p || !p.classList.contains("show")) return; p.classList.remove("show"); autoCheck(); try{ if(opener && opener.focus && document.contains(opener)) opener.focus(); }catch(e){} opener=null; }
+  function sync(){
+    const on = S.sfx||S.music;
+    document.querySelectorAll('[data-fx="panel"]').forEach(b=>{
+      b.textContent = on ? "🔊" : "🔇";
+      const lab = `Sound settings. Sounds ${S.sfx?"on":"off"}, music ${S.music?"on":"off"}`;
+      b.setAttribute("aria-label", lab); b.title = lab;
+    });
+    [["afxSfx",S.sfx],["afxMusic",S.music]].forEach(([id,v])=>{ const b=el(id); if(!b) return; b.setAttribute("aria-checked", String(v)); b.classList.toggle("on", v); b.querySelector(".afx-state").textContent = v ? "On" : "Off"; });
+    const n=el("afxNote"); if(n) n.textContent = AC_CLASS ? "Your choice is saved on this device." : "Sound isn't available in this browser, but the game works fine without it.";
+  }
+
+  /* ---------------- points burst ---------------- */
+  const DOTS = ["#ffd166","#00f5d4","#ff4d9e","#c44dff"];
+  function reduced(){ try{ return W.matchMedia("(prefers-reduced-motion: reduce)").matches; }catch(e){ return false; } }
+  function burst(anchor, text, sub){
+    try{
+      let x=W.innerWidth/2, y=W.innerHeight/2;
+      if(anchor && anchor.getBoundingClientRect){ const r=anchor.getBoundingClientRect(); if(r.width||r.height){ x=r.left+r.width/2; y=r.top+Math.min(10, r.height/2); } }
+      x=Math.max(105,Math.min(W.innerWidth-105,x)); y=Math.max(90,Math.min(W.innerHeight-20,y));
+      const still=reduced(), w=document.createElement("div");
+      w.className="afx-burst"+(still?" still":""); w.setAttribute("aria-hidden","true"); w.style.left=x+"px"; w.style.top=y+"px";
+      let h='<div class="afx-pts">'+text+(sub?'<small>'+sub+'</small>':'')+'</div>';
+      if(!still) for(let i=0;i<12;i++){ const a=i/12*Math.PI*2+Math.random()*0.4, r=30+Math.random()*28;
+        h+=`<i class="afx-dot" style="--dx:${(Math.cos(a)*r).toFixed(1)}px;--dy:${(Math.sin(a)*r).toFixed(1)}px;--c:${DOTS[i%4]}"></i>`; }
+      w.innerHTML=h; document.body.appendChild(w); setTimeout(()=>w.remove(), 950);
+    }catch(e){}
+  }
+  /* ---------------- auto-advance after a correct answer ----------------
+     One job at a time. It waits `ms`, pausing while the 🔊 panel (or a game modal, via init's
+     `paused` option) is open or the tab is hidden, then calls fn once. cancelAuto() stops it
+     (every Next/skip, leaving a screen or starting a round must call it, so nothing advances twice).
+     An optional button gets a thin progress bar (no bar with reduced motion). */
+  let autoJob=null, autoIv=null, pausedHook=null;
+  function autoPausedNow(){ try{ return isOpen() || (typeof document!=="undefined" && document.hidden) || !!(pausedHook && pausedHook()); }catch(e){ return false; } }
+  function autoBtn(j, cls, on){ try{ if(j && j.btn) j.btn.classList.toggle(cls, on); }catch(e){} }
+  function autoCheck(){
+    const j=autoJob; if(!j){ clearInterval(autoIv); autoIv=null; return; }
+    const p=autoPausedNow();
+    if(p && j.id){ clearTimeout(j.id); j.id=null; j.left -= Date.now()-j.t0; autoBtn(j,"afx-auto-paused",true); }
+    else if(!p && !j.id){
+      j.t0=Date.now(); autoBtn(j,"afx-auto-paused",false);
+      j.id=setTimeout(()=>{ if(autoJob!==j) return; autoJob=null; autoBtn(j,"afx-auto",false); clearInterval(autoIv); autoIv=null; try{ j.fn(); }catch(e){ try{ console.warn(e); }catch(_){} } }, Math.max(0, j.left));
+    }
+  }
+  function autoAdvance(fn, ms, btn){
+    cancelAuto();
+    const j={fn, left: ms==null?1500:ms, t0:0, id:null, btn:btn||null};
+    autoJob=j;
+    if(j.btn){ try{ j.btn.style.setProperty("--afx-auto", j.left+"ms"); j.btn.classList.remove("afx-auto","afx-auto-paused"); void j.btn.offsetWidth; j.btn.classList.add("afx-auto"); }catch(e){} }
+    autoCheck();
+    if(!autoIv) autoIv=setInterval(autoCheck, 100);
+    return true;
+  }
+  function cancelAuto(){
+    const j=autoJob; autoJob=null; clearInterval(autoIv); autoIv=null;
+    if(j){ clearTimeout(j.id); autoBtn(j,"afx-auto",false); autoBtn(j,"afx-auto-paused",false); }
+  }
+  function autoState(){ const j=autoJob; if(!j) return null; return {paused:!j.id, left: j.id ? Math.max(0, j.left-(Date.now()-j.t0)) : j.left}; }
+
+  function bump(node){ try{ if(!node || reduced()) return; node.classList.remove("afx-bump"); void node.offsetWidth; node.classList.add("afx-bump"); }catch(e){} }
+
+  /* ---------------- wiring ---------------- */
+  function onGesture(e){
+    if(e && e.isTrusted===false) return;
+    unlocked=true; if(S.sfx || S.music) resume();   /* sound fully off: never create an AudioContext */
+    if(S.music && !playing) musicStart();
+  }
+  function init(opts){
+    opts = opts || {};
+    if(opts.key) KEY=opts.key;
+    if(typeof opts.paused==="function") pausedHook=opts.paused;
+    load();
+    try{
+      ["pointerdown","keydown","touchend"].forEach(ev=>document.addEventListener(ev, onGesture, true));
+      /* soft click on every button / tile press (the panel's own switches included) */
+      document.addEventListener("click", e=>{ const b=e.target && e.target.closest && e.target.closest("button,[role=button]"); if(b && !b.disabled) play("click"); }, true);
+      document.addEventListener("click", e=>{ const b=e.target && e.target.closest && e.target.closest('[data-fx="panel"]'); if(b){ e.preventDefault(); open(b); } });
+      /* while the panel is open, keys go to the panel only (no answering behind it) */
+      W.addEventListener("keydown", e=>{ if(!isOpen()) return; if(e.key==="Escape"){ e.preventDefault(); close(); } e.stopImmediatePropagation(); }, true);
+      document.addEventListener("visibilitychange", ()=>{
+        if(document.hidden){ if(playing){ hiddenPause=true; musicStop(0.25); } setTimeout(()=>{ try{ if(document.hidden && ac && !playing && ac.state==="running") ac.suspend().catch(()=>{}); }catch(e){} }, 400); }
+        else { if(ac && gestureSeen()) resume(); if(hiddenPause){ hiddenPause=false; musicStart(); } }
+      });
+    }catch(e){}
+    sync();
+  }
+  return {
+    init, play, sync, open, close, isOpen, burst, bump,
+    click:()=>play("click"), ok:()=>play("ok"), bad:()=>play("bad"), fanfare:()=>play("fanfare"), soft:()=>play("soft"),
+    get sfx(){ return S.sfx; }, get music(){ return S.music; },
+    state:()=>({sfx:S.sfx, music:S.music, playing, hasAudio:!!AC_CLASS, ctx:ac?ac.state:null, bar:eng?eng.bar:0, open:isOpen(),
+      tempo: eng ? Math.round(eng.tempo*1000)/1000 : 1, tempoTarget, schedT: eng ? eng.time : 0, auto:autoState()}),
+    setTempo, tempoForQuestion, tempoForTime, get tempoTarget(){ return tempoTarget; },
+    autoAdvance, cancelAuto, autoState, reduced,
+    renderMusic, renderSfx, _musicStart:musicStart, _musicStop:musicStop
+  };
+})();
+
+</script>
+<script>
+"use strict";
+/* ========== DATA ========== */
+const P=["yo","tú","él / ella / usted","nosotros","ustedes","ellos / ellas"];
+const SUBJ=[["yo"],["tú"],["él","ella","usted"],["nosotros","nosotras"],["ustedes"],["ellos","ellas"]];
+const EN_SUBJ={yo:"I",tú:"you",él:"he",ella:"she",usted:"you (formal)",nosotros:"we",nosotras:"we",ustedes:"you all",ellos:"they",ellas:"they"};
+const END={ar:["o","as","a","amos","an","an"],er:["o","es","e","emos","en","en"],ir:["o","es","e","imos","en","en"]};
+// verb: inf, english [base, 3rd-sing], complement for sentences, irregular forms (optional), note
+const V={
+hablar:{en:["speak","speaks"],c:"español"},estudiar:{en:["study","studies"],c:"en la biblioteca"},trabajar:{en:["work","works"],c:"mucho"},
+bailar:{en:["dance","dances"],c:"en la fiesta"},cantar:{en:["sing","sings"],c:"en el coro"},cocinar:{en:["cook","cooks"],c:"la cena"},
+comprar:{en:["buy","buys"],c:"pan"},mirar:{en:["watch","watches"],c:"la tele"},escuchar:{en:["listen to","listens to"],c:"música"},
+nadar:{en:["swim","swims"],c:"en el mar"},caminar:{en:["walk","walks"],c:"a la escuela"},llegar:{en:["arrive","arrives"],c:"a las ocho"},
+ayudar:{en:["help","helps"],c:"en casa"},necesitar:{en:["need","needs"],c:"un lápiz"},practicar:{en:["practice","practices"],c:"deportes"},
+comer:{en:["eat","eats"],c:"arroz"},beber:{en:["drink","drinks"],c:"agua"},leer:{en:["read","reads"],c:"un libro"},
+correr:{en:["run","runs"],c:"en el parque"},aprender:{en:["learn","learns"],c:"español"},
+vivir:{en:["live","lives"],c:"en Lima"},escribir:{en:["write","writes"],c:"una carta"},abrir:{en:["open","opens"],c:"la puerta"},recibir:{en:["receive","receives"],c:"un regalo"},
+ser:{en:["be","is"],be:true,c:"de Colombia",f:["soy","eres","es","somos","son","son"],why:"ser is irregular: soy, eres, es, somos, son. Use it for who or what someone is, and where they're from."},
+estar:{en:["be","is"],be:true,c:"en casa",f:["estoy","estás","está","estamos","están","están"],why:"estar: estoy, estás, está, estamos, están. Use it for location and feelings. Watch the accents on estás, está, están."},
+ir:{en:["go","goes"],c:"a la escuela",f:["voy","vas","va","vamos","van","van"],why:"ir is fully irregular: voy, vas, va, vamos, van."},
+tener:{en:["have","has"],c:"un perro",f:["tengo","tienes","tiene","tenemos","tienen","tienen"],why:"tener: yo tengo (-go), then e→ie in tienes, tiene, tienen. Nosotros stays tenemos."},
+hacer:{en:["do","does"],c:"la tarea",f:["hago","haces","hace","hacemos","hacen","hacen"],why:"hacer is only irregular in yo: hago. The rest are regular -er."},
+poder:{en:["can","can"],c:"nadar",f:["puedo","puedes","puede","podemos","pueden","pueden"],why:"poder changes o→ue (puedo, puedes, puede, pueden). Nosotros stays podemos."},
+querer:{en:["want","wants"],c:"pizza",f:["quiero","quieres","quiere","queremos","quieren","quieren"],why:"querer changes e→ie (quiero, quieres, quiere, quieren). Nosotros stays queremos."},
+venir:{en:["come","comes"],c:"a clase",f:["vengo","vienes","viene","venimos","vienen","vienen"],why:"venir: yo vengo (-go), then e→ie in vienes, viene, vienen. Nosotros: venimos."},
+decir:{en:["say","says"],c:"la verdad",f:["digo","dices","dice","decimos","dicen","dicen"],why:"decir: yo digo, then e→i in dices, dice, dicen. Nosotros: decimos."},
+saber:{en:["know","knows"],c:"la respuesta",f:["sé","sabes","sabe","sabemos","saben","saben"],why:"saber is only irregular in yo: sé (with an accent). The rest are regular."},
+ver:{en:["see","sees"],c:"la película",f:["veo","ves","ve","vemos","ven","ven"],why:"ver: yo veo (keeps the e). The rest are short: ves, ve, vemos, ven."},
+dar:{en:["give","gives"],c:"un regalo",f:["doy","das","da","damos","dan","dan"],why:"dar: yo doy (like soy, estoy, voy). The rest are regular -ar."},
+salir:{en:["leave","leaves"],c:"de casa",f:["salgo","sales","sale","salimos","salen","salen"],why:"salir is only irregular in yo: salgo (-go)."},
+poner:{en:["put","puts"],c:"la mesa",f:["pongo","pones","pone","ponemos","ponen","ponen"],why:"poner is only irregular in yo: pongo (-go)."},
+pensar:{en:["think","thinks"],c:"en el examen",f:["pienso","piensas","piensa","pensamos","piensan","piensan"],why:"pensar is a boot verb e→ie: pienso, piensas, piensa, piensan. Nosotros is outside the boot: pensamos."},
+preferir:{en:["prefer","prefers"],c:"el café",f:["prefiero","prefieres","prefiere","preferimos","prefieren","prefieren"],why:"preferir is a boot verb e→ie (the second e): prefiero… Nosotros is outside the boot: preferimos."},
+dormir:{en:["sleep","sleeps"],c:"ocho horas",f:["duermo","duermes","duerme","dormimos","duermen","duermen"],why:"dormir is a boot verb o→ue: duermo, duermes, duerme, duermen. Nosotros: dormimos."},
+volver:{en:["return","returns"],c:"a casa",f:["vuelvo","vuelves","vuelve","volvemos","vuelven","vuelven"],why:"volver is a boot verb o→ue: vuelvo… Nosotros: volvemos."},
+pedir:{en:["ask for","asks for"],c:"agua",f:["pido","pides","pide","pedimos","piden","piden"],why:"pedir is a boot verb e→i: pido, pides, pide, piden. Nosotros: pedimos."},
+servir:{en:["serve","serves"],c:"la comida",f:["sirvo","sirves","sirve","servimos","sirven","sirven"],why:"servir is a boot verb e→i: sirvo… Nosotros: servimos."},
+repetir:{en:["repeat","repeats"],c:"la palabra",f:["repito","repites","repite","repetimos","repiten","repiten"],why:"repetir is a boot verb e→i (the last e): repito… Nosotros: repetimos."}
+};
+function fam(inf){return inf.slice(-2);}
+function regular(inf){const s=inf.slice(0,-2),e=END[fam(inf)];return e.map(x=>s+x);}
+function forms(inf){return V[inf].f||regular(inf);}
+const LEVELS=[
+{t:"Level 1 · Regular -AR verbs",sub:"Drop -ar, add o · as · a · amos · an",parts:[
+ {t:"Part A",v:["hablar","estudiar","trabajar","bailar","cantar"]},{t:"Part B",v:["cocinar","comprar","mirar","escuchar","nadar"]},{t:"Part C",v:["caminar","llegar","ayudar","necesitar","practicar"]}]},
+{t:"Level 2 · Regular -ER / -IR verbs",sub:"-er: o · es · e · emos · en   -ir: o · es · e · imos · en",parts:[
+ {t:"Part A · -ER",v:["comer","beber","leer","correr","aprender"]},{t:"Part B · -IR",v:["vivir","escribir","abrir","recibir"]}]},
+{t:"Level 3 · ser · estar · ir",sub:"The big three. One verb per part, then nothing else mixed in.",parts:[
+ {t:"Part A · ser",v:["ser"]},{t:"Part B · estar",v:["estar"]},{t:"Part C · ir",v:["ir"]},{t:"Part D · ser + estar + ir mix",v:["ser","estar","ir"]}]},
+{t:"Level 4 · Other irregular verbs",sub:"Many are only weird in the yo form.",parts:[
+ {t:"Part A · tener, venir, decir",v:["tener","venir","decir"]},{t:"Part B · hacer, poner, salir",v:["hacer","poner","salir"]},
+ {t:"Part C · dar, ver, saber",v:["dar","ver","saber"]},{t:"Part D · querer, poder",v:["querer","poder"]}]},
+{t:"Level 5 · Stem-changing (boot) verbs",sub:"The stem changes everywhere except nosotros.",parts:[
+ {t:"Part A · e → ie",v:["pensar","preferir"]},{t:"Part B · o → ue",v:["dormir","volver"]},{t:"Part C · e → i",v:["pedir","servir","repetir"]}]}
+];
+const STEPS=[{k:"sg",t:"1 · Singular",d:"yo · tú · él/ella/usted",p:[0,1,2]},{k:"pl",t:"2 · Plural",d:"nosotros · ustedes · ellos/ellas",p:[3,4,5]},{k:"cb",t:"3 · Combo",d:"all six persons mixed",p:[0,1,2,3,4,5]},{k:"bn",t:"⭐ Bonus",d:"6 quick ones · double aura",p:[0,1,2,3,4,5]}];
+const FARM=[["🌽","maíz","corn"],["🫘","frijoles","beans"],["🌶️","chile","chili pepper"],["🥔","papa","potato (from the Andes)"],["🍠","yuca","cassava"],["🥑","aguacate","avocado"],["🍌","plátano","plantain"],["🥭","mango","mango"],["🍍","piña","pineapple"],["🥥","coco","coconut"],["🍫","cacao","cacao / chocolate"],["☕","café","coffee"],["🧉","mate","yerba mate"],["🫓","arepa","arepa"],["🥟","empanada","empanada"],["🫔","tamal","tamale"],["🍞","pan dulce","sweet bread"],["🌾","quinua","quinoa"],["🦙","llama","llama"],["🐑","alpaca","alpaca"],["🦜","guacamayo","macaw"],["🐦","quetzal","quetzal bird"],["🦅","cóndor","condor"],["🐢","tortuga","sea turtle"],["🦥","perezoso","sloth"],["🐆","jaguar","jaguar"],["🐒","mono","monkey"],["🌳","ceiba","ceiba tree"]];
+/* ========== STATE ========== */
+const KEY="auraFarmEs1.v1";
+let S={aura:0,done:{}};
+try{const v=JSON.parse(localStorage.getItem(KEY));if(v&&typeof v==="object"){S.aura=+v.aura||0;S.done=v.done||{};}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function sid(l,p,s){return l+"."+p+"."+s;}
+function doneCount(){return Object.keys(S.done).length;}
+function farmUnlocked(){return Math.min(FARM.length,Math.floor(doneCount()/2));}
+const $=id=>document.getElementById(id);
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function rnd(a){return a[Math.floor(Math.random()*a.length)];}
+function shuf(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function setAura(d,anchor,sub){S.aura+=d;save();$("aura").textContent="⭐ "+S.aura;if(d>0){AuraFX.burst(anchor,"+"+d,sub);AuraFX.bump($("aura"));}}
+/* ========== NAV ========== */
+let cur={l:0,p:0,s:0},inRound=false,stack=["home"];
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));$("backBtn").style.display=id==="home"?"none":"";window.scrollTo(0,0);}
+function go(id,push){if(push!==false){stack.push(id);try{history.pushState({s:id},"");}catch(e){}}show(id);}
+function back(){if(inRound){openLeave();return;}stack.pop();const id=stack[stack.length-1]||"home";if(id==="level")renderLevel();if(id==="part")renderPart();if(id==="home")renderHome();show(id);}
+$("backBtn").onclick=()=>{if(inRound){openLeave();return;}try{history.back();}catch(e){back();}};
+window.addEventListener("popstate",()=>{if(inRound){try{history.pushState({s:"play"},"");}catch(e){}openLeave();return;}back();});
+try{history.replaceState({s:"home"},"");}catch(e){}
+function openLeave(){$("leaveM").classList.add("show");$("leaveNo").focus();}
+$("leaveNo").onclick=()=>$("leaveM").classList.remove("show");
+$("leaveYes").onclick=()=>{$("leaveM").classList.remove("show");endRoundCleanup();inRound=false;try{history.back();}catch(e){back();}};
+/* ========== HOME ========== */
+function partDone(l,p){return STEPS.every((_,s)=>S.done[sid(l,p,s)]);}
+function renderHome(){
+ $("aura").textContent="⭐ "+S.aura;
+ $("levels").innerHTML=LEVELS.map((L,l)=>{let n=0,t=0;L.parts.forEach((_,p)=>STEPS.forEach((_,s)=>{t++;if(S.done[sid(l,p,s)])n++;}));
+  return `<button class="lv" data-l="${l}"><b>${esc(L.t)}</b> <span class="muted small16">· ${n}/${t} steps</span><br><span class="small16">${esc(L.sub)}</span><span class="bar"><i style="width:${Math.round(100*n/t)}%"></i></span></button>`;}).join("");
+ document.querySelectorAll(".lv").forEach(b=>b.onclick=()=>{cur.l=+b.dataset.l;renderLevel();go("level");});
+ renderFarm();
+}
+let lastFarm=farmUnlocked();
+function renderFarm(){const u=farmUnlocked();
+ $("farmCount").textContent=`· ${u}/${FARM.length} · a new item every 2 steps`;
+ $("farm").innerHTML=FARM.map((f,i)=>`<div class="fi ${i<u?"":"lock"} ${i<u&&i>=lastFarm?"new":""}" title="${esc(f[2])}"><span class="e" aria-hidden="true">${i<u?f[0]:"🔒"}</span>${i<u?esc(f[1]):"???"}<small>${i<u?esc(f[2]):"locked"}</small></div>`).join("");
+ lastFarm=u;}
+function renderLevel(){const L=LEVELS[cur.l];$("lvTitle").textContent=L.t;$("lvSub").textContent=L.sub;
+ $("parts").innerHTML=L.parts.map((P_,p)=>{const n=STEPS.filter((_,s)=>S.done[sid(cur.l,p,s)]).length;
+  return `<button class="lv" data-p="${p}"><b>${esc(P_.t)}</b> ${n===4?"✅":`<span class="muted small16">${n}/4</span>`}<br><span class="small16">${P_.v.map(esc).join(" · ")}</span></button>`;}).join("");
+ document.querySelectorAll("#parts .lv").forEach(b=>b.onclick=()=>{cur.p=+b.dataset.p;renderPart();go("part");});}
+function stepOpen(s){return s===0||!!S.done[sid(cur.l,cur.p,s-1)];}
+function renderPart(){const P_=LEVELS[cur.l].parts[cur.p];$("ptTitle").textContent=LEVELS[cur.l].t.split("·")[0]+"· "+P_.t;
+ $("ptVerbs").innerHTML="Verbs: <b>"+P_.v.map(v=>esc(v)+" ("+esc(V[v].en[0])+")").join(", ")+"</b>";
+ $("steps").innerHTML=STEPS.map((st,s)=>{const d=S.done[sid(cur.l,cur.p,s)],o=stepOpen(s);
+  return `<button class="st ${d?"done":""} ${s===3?"bonus":""}" data-s="${s}" ${o?"":"disabled"}><b>${st.t} ${d?"✅":o?"":"🔒"}</b><span class="small16">${st.d}</span></button>`;}).join("");
+ document.querySelectorAll(".st").forEach(b=>b.onclick=()=>{cur.s=+b.dataset.s;if(cur.s===3){startRound("bonus");return;}showModes();});
+ $("modeCard").style.display="none";}
+const MODES=[["swipe","👆 Swipe Match","English + Spanish: match or not?"],["drop","🎯 Lock In Drop","Drag the right form into the blank"],["build","✍️ Sentence Builder","Type the verb in a sentence"],["battle","⚔️ Aura Battle","60 seconds. Tap fast!"]];
+function showModes(){$("modeCard").style.display="";$("modeTitle").textContent=STEPS[cur.s].t+" — choose a game";
+ $("modes").innerHTML=MODES.map(m=>`<button class="mode" data-m="${m[0]}"><b>${m[1]}</b><span class="small16">${m[2]}</span></button>`).join("");
+ document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>startRound(b.dataset.m));
+ $("modeCard").scrollIntoView({behavior:AuraFX.reduced()?"auto":"smooth",block:"start"});}
+/* ========== QUESTIONS ========== */
+function enPhrase(subj,inf){const v=V[inf],es=EN_SUBJ[subj];
+ if(v.be){const b=subj==="yo"?"am":(subj==="él"||subj==="ella")?"is":"are";return `${es} ${b}`;}
+ const third=(subj==="él"||subj==="ella");return `${es} ${third?v.en[1]:v.en[0]}`;}
+function makeQ(inf,p){const subj=rnd(SUBJ[p]);return {inf,p,subj,ans:forms(inf)[p]};}
+function pool(n){const st=STEPS[cur.s],vs=LEVELS[cur.l].parts[cur.p].v;let out=[],last="";
+ for(let i=0;i<n;i++){let q,t=0;do{q=makeQ(rnd(vs),rnd(st.p));t++;}while(q.inf+q.p===last&&t<10);last=q.inf+q.p;out.push(q);}return out;}
+function fakeForms(inf){// common student mistakes (intentionally wrong) for irregular/stem verbs
+ const out=[];if(!V[inf].f)return out;const r=regular(inf),f=forms(inf);
+ r.forEach((x,i)=>{if(x!==f[i])out.push(x);});
+ if(/ie|ue|i/.test(f[0])&&V[inf].why&&V[inf].why.includes("boot")){out.push(f[0].replace(/o$/,"amos").replace(/amos$/, fam(inf)==="ar"?"amos":fam(inf)==="er"?"emos":"imos"));}
+ return out.filter(x=>!f.includes(x));}
+function distractors(q,n,stepOnly){const f=forms(q.inf);let c=[];
+ const ps=stepOnly?STEPS[cur.s].p:[0,1,2,3,4,5];ps.forEach(i=>c.push(f[i]));
+ [0,1,2,3,4,5].forEach(i=>c.push(f[i]));c=c.concat(fakeForms(q.inf));c.push(q.inf);
+ c=[...new Set(c)].filter(x=>x!==q.ans);
+ const prefer=c.filter((x,i)=>i<6);const rest=c.slice(6);return shuf(prefer).concat(shuf(rest)).slice(0,n);}
+function owners(inf,form){const f=forms(inf),o=[];f.forEach((x,i)=>{if(x===form)o.push(i);});return o;}
+function pname(list){return list.map(i=>P[i]).filter((x,i,a)=>a.indexOf(x)===i).join(" and ");}
+function strip(s){return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"");}
+function why(q,given){const v=V[q.inf],f=forms(q.inf),g=(given||"").trim().toLowerCase();
+ let msg="";
+ if(!g)msg=`The answer is <b>${esc(q.ans)}</b>.`;
+ else if(strip(g)===strip(q.ans)&&g!==q.ans)return `So close! Check the accent: <b>${esc(q.ans)}</b>.`;
+ else if(g===q.inf)msg=`<b>${esc(g)}</b> is the infinitive ("to ${esc(v.en[0])}"). You need to conjugate it for <b>${esc(q.subj)}</b>: <b>${esc(q.ans)}</b>.`;
+ else{const o=owners(q.inf,g);
+  if(o.length)msg=`<b>${esc(g)}</b> is the <b>${esc(pname(o))}</b> form. For <b>${esc(q.subj)}</b> you need <b>${esc(q.ans)}</b>.`;
+  else{let other=null;for(const k in V){if(k!==q.inf&&forms(k).includes(g)){other=k;break;}}
+   if(other)msg=`<b>${esc(g)}</b> is a form of <b>${esc(other)}</b>. This one is <b>${esc(q.inf)}</b>: ${esc(q.subj)} <b>${esc(q.ans)}</b>.`;
+   else if(regular(q.inf).includes(g))msg=`<b>${esc(g)}</b> is how a regular verb would look, but <b>${esc(q.inf)}</b> is irregular here: ${esc(q.subj)} <b>${esc(q.ans)}</b>.`;
+   else msg=`Not quite. ${esc(q.subj)} + ${esc(q.inf)} = <b>${esc(q.ans)}</b>.`;}}
+ if(v.why)msg+=`<br><span class="small16">${esc(v.why)}</span>`;
+ else{const e=END[fam(q.inf)];msg+=`<br><span class="small16">Regular -${fam(q.inf)}: drop -${fam(q.inf)}, then ${esc(P[q.p])} takes <b>-${e[q.p]}</b>.</span>`;}
+ return msg;}
+/* ========== ROUNDS ========== */
+let R=null;
+function endRoundCleanup(){AuraFX.cancelAuto();if(R&&R.timer)clearInterval(R.timer);if(R&&R.cleanup)R.cleanup();AuraFX.setTempo&&AuraFX.setTempo(1);}
+function startRound(mode){endRoundCleanup();
+ const n=mode==="bonus"?6:mode==="build"?8:mode==="battle"?200:10;
+ R={mode,qs:pool(n),i:0,right:0,tries:0,first:true,pts:mode==="bonus"?20:10,locked:false};
+ inRound=true;$("playTitle").textContent=(mode==="bonus"?"⭐ Bonus round · double aura":MODES.find(m=>m[0]===mode)[1]+" · "+STEPS[cur.s].t.replace(/^\d · /,""));
+ if(stack[stack.length-1]!=="play")go("play");else show("play");
+ if(mode==="battle"){R.left=60;R.timer=setInterval(()=>{if(R.locked||AuraFX.isOpen()||$("chartM").classList.contains("show"))return;R.left--;$("playInfo").textContent="⏱ "+R.left+"s";AuraFX.setTempo(AuraFX.tempoForTime(R.left,60));if(R.left<=0)finish();},1000);}
+ render();}
+function render(){const q=R.qs[R.i];R.first=true;R.locked=false;$("fb").innerHTML="";$("fb").className="fb";$("nextBtn").style.display="none";
+ if(R.mode!=="battle"){$("progBar").style.width=(100*R.i/R.qs.length)+"%";$("playInfo").textContent=(R.i+1)+" / "+R.qs.length;AuraFX.setTempo(AuraFX.tempoForQuestion(R.i,R.qs.length));}
+ else{$("progBar").style.width=(100*(60-R.left)/60)+"%";$("playInfo").textContent="⏱ "+R.left+"s";}
+ ({swipe:rSwipe,drop:rDrop,build:rBuild,battle:rBattle,bonus:rBonus})[R.mode](q);}
+function correct(anchor){if(R.first)R.right++;R.locked=true;AuraFX.ok();setAura(R.first?R.pts:Math.round(R.pts/2),anchor,R.mode==="bonus"&&R.first?"double!":"");
+ $("fb").className="fb ok";$("fb").innerHTML="✅ "+rnd(["Nice!","Yes!","Aura +","Perfect!","Got it!"]);}
+function wrong(q,given){R.first=false;AuraFX.bad();$("fb").className="fb bad";$("fb").innerHTML="❌ "+why(q,given);}
+function advance(){AuraFX.cancelAuto();R.i++;if(R.i>=R.qs.length)finish();else render();}
+function autoNext(){AuraFX.autoAdvance(advance,1500,$("nextBtn"));$("nextBtn").style.display="";}
+$("nextBtn").onclick=()=>{if(R)advance();};
+// swipe
+function rSwipe(q){const isMatch=Math.random()<.5;const shownForm=isMatch?q.ans:distractors(q,1,true)[0];R.sw={isMatch,shownForm};
+ $("stage").innerHTML=`<p class="center muted small16">Does the Spanish match the English? Swipe right or tap ✓ for yes, left or ✗ for no.</p>
+ <div class="prompt" id="swc"><span class="en">${esc(enPhrase(q.subj,q.inf))} <span class="small16">(${esc(q.inf)})</span></span><span class="big">${esc(q.subj)} ${esc(shownForm)}</span></div>
+ <div class="center"><button class="btn no" id="swNo">✗ No</button><button class="btn yes" id="swYes">✓ Match</button></div>`;
+ const pick=yes=>{if(R.locked)return;const c=$("swc");
+  if(yes===isMatch){correct(c);if(!AuraFX.reduced())c.style.transform=`translateX(${yes?120:-120}px) rotate(${yes?8:-8}deg)`;
+   if(!isMatch)$("fb").innerHTML+=` <b>${esc(shownForm)}</b> was wrong — ${esc(q.subj)} needs <b>${esc(q.ans)}</b>.`;autoNext();}
+  else{R.locked=true;wrong(q,isMatch?null:shownForm);if(isMatch)$("fb").innerHTML=`❌ It was a match! ${esc(enPhrase(q.subj,q.inf))} = <b>${esc(q.subj)} ${esc(q.ans)}</b>.`+(V[q.inf].why?`<br><span class="small16">${esc(V[q.inf].why)}</span>`:"");
+   else $("fb").innerHTML=`❌ Not a match. `+why(q,shownForm);$("nextBtn").style.display="";}};
+ $("swYes").onclick=()=>pick(true);$("swNo").onclick=()=>pick(false);
+ let x0=null;const c=$("swc");c.onpointerdown=e=>{x0=e.clientX;};c.onpointerup=e=>{if(x0===null)return;const dx=e.clientX-x0;x0=null;if(Math.abs(dx)>60)pick(dx>0);};
+ R.key=e=>{if(e.key==="ArrowRight")pick(true);if(e.key==="ArrowLeft")pick(false);};}
+// choice core (drop / bonus / battle)
+function choiceStage(q,opts,{drag,sentence}){const sent=sentence?`${esc(cap(q.subj))} <span class="slot" id="slot">?</span> ${esc(V[q.inf].c)}.`:`${esc(q.subj)} <span class="slot" id="slot">?</span>`;
+ $("stage").innerHTML=`<p class="center muted small16">${drag?"Drag the right form into the blank (or tap it).":"Tap the right form."}</p>
+ <div class="prompt"><span class="en">${esc(enPhrase(q.subj,q.inf))} · (${esc(q.inf)})</span><span class="big">${sent}</span></div>
+ <div class="chips" id="chips">${opts.map(o=>`<button class="chip" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
+ const choose=(b)=>{if(R.locked)return;const v=b.dataset.v;
+  if(v===q.ans){b.classList.add("right");$("slot").textContent=v;correct(b);autoNext();}
+  else{b.classList.add("wrong");b.disabled=true;wrong(q,v);$("fb").innerHTML+=`<br><span class="small16">Try again!</span>`;}};
+ document.querySelectorAll("#chips .chip").forEach(b=>{b.onclick=()=>{if(!b._dragged)choose(b);b._dragged=false;};if(drag)enableDrag(b,choose);});}
+function cap(s){return s.charAt(0).toUpperCase()+s.slice(1);}
+function enableDrag(b,choose){b.onpointerdown=e=>{if(R.locked||b.disabled)return;const sx=e.clientX,sy=e.clientY;let ghost=null;
+ const mv=ev=>{if(!ghost&&Math.hypot(ev.clientX-sx,ev.clientY-sy)>8){ghost=b.cloneNode(true);ghost.classList.add("drag");document.body.appendChild(ghost);}
+  if(ghost){ghost.style.left=(ev.clientX-40)+"px";ghost.style.top=(ev.clientY-26)+"px";const r=$("slot").getBoundingClientRect();$("slot").classList.toggle("hot",ev.clientX>r.left-30&&ev.clientX<r.right+30&&ev.clientY>r.top-40&&ev.clientY<r.bottom+40);}};
+ const up=ev=>{document.removeEventListener("pointermove",mv);document.removeEventListener("pointerup",up);
+  if(ghost){ghost.remove();b._dragged=true;const hot=$("slot")&&$("slot").classList.contains("hot");if($("slot"))$("slot").classList.remove("hot");if(hot)choose(b);setTimeout(()=>b._dragged=false,50);}};
+ document.addEventListener("pointermove",mv);document.addEventListener("pointerup",up);};}
+function rDrop(q){choiceStage(q,shuf([q.ans].concat(distractors(q,3,true))),{drag:true,sentence:true});}
+function rBonus(q){choiceStage(q,shuf([q.ans].concat(distractors(q,2,false))),{drag:false,sentence:false});}
+// build
+function rBuild(q){$("stage").innerHTML=`<p class="center muted small16">Type the verb that fits. Use the accent buttons if you need them.</p>
+ <div class="prompt"><span class="en">${esc(enPhrase(q.subj,q.inf))} · (${esc(q.inf)})</span><span class="big">${esc(cap(q.subj))} <span class="slot">___</span> ${esc(V[q.inf].c)}.</span></div>
+ <div class="center"><input class="inp" id="bIn" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="Your answer"><button class="btn" id="bGo">Check</button></div>
+ <div class="acc">${["á","é","í","ó","ú","ñ"].map(c=>`<button data-c="${c}" aria-label="type ${c}">${c}</button>`).join("")}</div>`;
+ const inp=$("bIn");setTimeout(()=>inp.focus(),30);
+ document.querySelectorAll(".acc button").forEach(b=>b.onclick=()=>{const s=inp.selectionStart??inp.value.length;inp.value=inp.value.slice(0,s)+b.dataset.c+inp.value.slice(inp.selectionEnd??s);inp.focus();inp.setSelectionRange(s+1,s+1);});
+ const check=()=>{if(R.locked)return;const g=inp.value.trim().toLowerCase().replace(/\s+/g," ").replace(new RegExp("^"+q.subj+" "),"");if(!g)return;
+  if(g===q.ans){inp.style.borderColor="var(--ok)";correct(inp);autoNext();}else{wrong(q,g);if(R.tries++>=1){R.locked=true;inp.value=q.ans;$("nextBtn").style.display="";}else $("fb").innerHTML+=`<br><span class="small16">Try once more!</span>`;}};
+ R.tries=0;$("bGo").onclick=check;inp.onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();check();}};}
+// battle
+function rBattle(q){const opts=shuf([q.ans].concat(distractors(q,3,true)));
+ $("stage").innerHTML=`<div class="prompt"><span class="en">${esc(enPhrase(q.subj,q.inf))}</span><span class="big">${esc(q.subj)} · ${esc(q.inf)}</span></div>
+ <p class="center small16">Hits: <b id="hits">${R.right}</b></p><div class="bat">${opts.map(o=>`<button class="chip" data-v="${esc(o)}">${esc(o)}</button>`).join("")}</div>`;
+ document.querySelectorAll(".bat .chip").forEach(b=>b.onclick=()=>{if(R.locked)return;
+  if(b.dataset.v===q.ans){b.classList.add("right");correct(b);R.locked=true;setTimeout(()=>{if(R&&R.mode==="battle"&&inRound){R.i++;if(R.i>=R.qs.length)R.qs=R.qs.concat(pool(50));render();}},700);}
+  else{b.classList.add("wrong");b.disabled=true;wrong(q,b.dataset.v);}});}
+document.addEventListener("keydown",e=>{if(!inRound||!R||$("leaveM").classList.contains("show")||$("chartM").classList.contains("show"))return;
+ if(R.key&&R.mode==="swipe")R.key(e);
+ if(R.mode!=="build"&&R.mode!=="battle"&&/^[1-4]$/.test(e.key)){const c=document.querySelectorAll("#chips .chip")[+e.key-1];if(c)c.click();}
+ if(e.key==="Enter"&&$("nextBtn").style.display!=="none"&&R.mode!=="build")advance();});
+function finish(){endRoundCleanup();inRound=false;const total=R.mode==="battle"?null:R.qs.length;
+ const need=R.mode==="battle"?8:R.mode==="bonus"?4:R.mode==="build"?6:7;const passed=R.right>=need;const id=sid(cur.l,cur.p,cur.s);
+ const before=farmUnlocked();let newStep=false;if(passed&&!S.done[id]){S.done[id]=1;newStep=true;save();}
+ const after=farmUnlocked();
+ $("resTitle").textContent=passed?"🎉 Step complete!":"Almost there!";
+ $("resScore").textContent=R.mode==="battle"?R.right+" hits":R.right+" / "+total;
+ let msg=passed?(newStep?"This step is done. ":"Great practice! "):`You need ${need}${R.mode==="battle"?" hits":" first-try right"} to finish this step. Open 📋 to review, then try again.`;
+ if(after>before){const f=FARM[after-1];msg+=` <br><b>New farm item:</b> <span style="font-size:32px">${f[0]}</span> ${esc(f[1])} (${esc(f[2])})!`;}
+ else if(passed&&after<FARM.length)msg+=` Finish ${2-doneCount()%2} more step${2-doneCount()%2>1?"s":""} for your next farm item.`;
+ $("resMsg").innerHTML=msg;if(passed)AuraFX.fanfare();
+ stack[stack.length-1]="result";show("result");}
+$("resAgain").onclick=()=>startRound(R.mode);
+$("resBack").onclick=()=>{try{history.back();}catch(e){back();}};
+/* ========== CHART ========== */
+function chartHTML(){const vs=onPlayOrPart()?LEVELS[cur.l].parts[cur.p].v:["hablar","comer","vivir","ser","estar","ir"];const sg=onPlayOrPart()&&cur.s===0;
+ let h=sg?`<p class="small16 muted">Singular step: the plural side is dimmed. It's coming next!</p>`:"";
+ h+=`<p class="small16">Endings — <b>-ar</b>: o, as, a, amos, an · <b>-er</b>: o, es, e, emos, en · <b>-ir</b>: o, es, e, imos, en</p>`;
+ vs.forEach(inf=>{const f=forms(inf),reg=!V[inf].f,stem=inf.slice(0,-2);
+  const cell=i=>reg?`${esc(stem)}<span class="end">${esc(f[i].slice(stem.length))}</span>`:`<span class="end">${esc(f[i])}</span>`;
+  h+=`<h3>${esc(inf)} <span class="muted small16">(to ${esc(V[inf].en[0])})</span></h3><table class="ch"><tr><th>Singular</th><th></th><th class="${sg?"hide":""}">Plural</th><th class="${sg?"hide":""}"></th></tr>`;
+  for(let i=0;i<3;i++)h+=`<tr><td>${P[i]}</td><td>${cell(i)}</td><td class="${sg?"hide":""}">${P[i+3]}</td><td class="${sg?"hide":""}">${cell(i+3)}</td></tr>`;
+  h+=`</table>${V[inf].why?`<p class="small16">${esc(V[inf].why)}</p>`:""}`;});return h;}
+function onPlayOrPart(){const t=stack[stack.length-1];return t==="part"||t==="play"||t==="result";}
+$("chartBtn").onclick=()=>{$("chartBody").innerHTML=chartHTML();$("chartM").classList.add("show");$("chartClose").focus();};
+$("chartClose").onclick=()=>$("chartM").classList.remove("show");
+document.addEventListener("keydown",e=>{if(e.key==="Escape"){$("chartM").classList.remove("show");$("leaveM").classList.remove("show");}},true);
+/* ========== SAVE CODE ========== */
+$("showCode").onclick=()=>{const code="ES1-"+btoa(JSON.stringify({a:S.aura,d:Object.keys(S.done)}));$("codeOut").innerHTML=`<b>${esc(code)}</b>`;};
+$("loadCode").onclick=()=>{const c=prompt("Paste your save code:");if(!c)return;try{const o=JSON.parse(atob(c.trim().replace(/^ES1-/,"")));S.aura=+o.a||0;S.done={};(o.d||[]).forEach(k=>{if(/^\d+\.\d+\.\d$/.test(k))S.done[k]=1;});save();lastFarm=farmUnlocked();renderHome();$("codeOut").textContent="✅ Farm loaded!";}catch(e){$("codeOut").textContent="That code didn't work. Check it and try again.";}};
+/* ========== INIT ========== */
+AuraFX.init({key:"auraFX.es1",paused:()=>$("chartM").classList.contains("show")||$("leaveM").classList.contains("show")});
+window.addEventListener("beforeunload",e=>{if(inRound){e.preventDefault();e.returnValue="";}});
+renderHome();
+window.__ES1={V,LEVELS,FARM,forms,regular,S,why,distractors,makeQ,cur,get R(){return R;}};
+</script>
+</body></html>
